@@ -1,0 +1,16 @@
+version: '3.8'
+
+services:
+  web:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - hindalco_db:/app
+    environment:
+      - DATABASE_URL=sqlite:///./hindalco.db
+    env_file:
+      - .env
+
+volumes:
+  hindalco_db:

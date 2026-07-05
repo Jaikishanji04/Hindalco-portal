@@ -1,0 +1,1485 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Hindalco Hospital, Renukoot - Medical Portal</title>
+<!-- Google Fonts for Modern Premium Typography -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="style.css" rel="stylesheet"/>
+</head>
+<body>
+<!-- Main Application Wrapper -->
+<div id="app-container">
+<!-- ==================== VIEW 1: AUTHENTICATION SCREEN ==================== -->
+<section class="view-section active" id="auth-screen">
+<div class="auth-card-container">
+<!-- Right Column: Login & Signup Forms (Now Centered Card) -->
+<div class="auth-form-panel">
+<!-- Aditya Birla Group Brand Header -->
+<div class="abg-portal-header">
+<img alt="Aditya Birla Group Logo" class="abg-logo" src="aditya-birla-group-logo-png_seeklogo-385778.png"/>
+<div class="abg-title-group">
+<h1 class="abg-main-title">Hindalco Hospital</h1>
+<span class="abg-subtitle">Medical Portal - Renukoot</span>
+</div>
+</div>
+<div class="auth-form-header">
+<h2 id="auth-form-title">Welcome to the Portal</h2>
+<p id="auth-form-subtitle">Please enter your credentials to access the medical portal.</p>
+</div>
+<!-- Role Toggle Button: Employee vs Non-Employee -->
+<div class="role-selector-container">
+<div class="role-selector-bg"></div>
+<button class="role-btn" id="role-non-employee" onclick="setRole('non-employee')" type="button">
+<svg class="role-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+<circle cx="9" cy="7" r="4"></circle>
+<path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+<path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+</svg>
+                            Non-Employee
+                        </button>
+<button class="role-btn active" id="role-employee" onclick="setRole('employee')" type="button">
+<svg class="role-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect>
+<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg>
+                            Employee
+                        </button>
+<button class="role-btn" id="role-doctor" onclick="setRole('doctor')" type="button">
+<svg class="role-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+                Doctor
+            </button>
+</div>
+<!-- Input Forms -->
+<form id="auth-form" onsubmit="handleAuthSubmit(event)">
+<!-- Display Name (Sign-up only) -->
+<div class="input-group signup-only hidden" id="reg-name-group">
+<label for="reg-name">Full Name</label>
+<div class="input-wrapper">
+<svg class="input-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+<circle cx="12" cy="7" r="4"></circle>
+</svg>
+<input id="reg-name" placeholder="John Doe" type="text"/>
+</div>
+</div>
+<!-- Email/Username -->
+<div class="input-group non-employee-only">
+<label for="auth-email" id="email-label">Email / Mobile Number</label>
+<div class="input-wrapper">
+<svg class="input-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"></path>
+<polyline points="22,6 12,13 2,6"></polyline>
+</svg>
+<input id="auth-email" placeholder="name@example.com or 9876543210" required="" type="text"/>
+</div>
+</div>
+<!-- Staff ID (Employee only) -->
+<div class="input-group employee-only">
+<label for="auth-staff-id">Hindalco Employee ID</label>
+<div class="input-wrapper">
+<svg class="input-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect>
+<line x1="16" x2="16" y1="2" y2="6"></line>
+<line x1="8" x2="8" y1="2" y2="6"></line>
+<line x1="3" x2="21" y1="10" y2="10"></line>
+</svg>
+<input id="auth-staff-id" placeholder="HIND-EMP-4029" required="" type="text"/>
+</div>
+</div>
+<!-- PAN Number (Employee Sign-up only) -->
+<div class="input-group employee-only signup-only hidden" id="reg-pan-group">
+<label for="reg-pan">PAN Number</label>
+<div class="input-wrapper">
+<svg class="input-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="18" rx="2" ry="2" width="18" x="3" y="4"></rect>
+<path d="M7 8h10M7 12h10M7 16h10"></path>
+</svg>
+<input id="reg-pan" placeholder="ABCDE1234F" type="text"/>
+</div>
+</div>
+<!-- Password -->
+<div class="input-group">
+<label for="auth-password" id="auth-password-label">Password</label>
+<div class="input-wrapper">
+<svg class="input-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect>
+<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg>
+<input id="auth-password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" required="" type="password"/>
+</div>
+</div>
+<!-- Re-write Password (Sign-up only) -->
+<div class="input-group signup-only hidden" id="reg-confirm-password-group">
+<label for="reg-confirm-password">Re-write Password</label>
+<div class="input-wrapper">
+<svg class="input-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect>
+<path d="M7 11V7a5 5 0 0 1 10 0v4"></path>
+</svg>
+<input id="reg-confirm-password" placeholder="â€¢â€¢â€¢â€¢â€¢â€¢â€¢â€¢" type="password"/>
+</div>
+</div>
+<div class="error-text hidden" id="auth-error">Invalid credentials. Please try again.</div>
+<button class="submit-btn" id="submit-btn-text" type="submit">Log In</button>
+<div class="auth-toggle-link">
+<span id="toggle-text-prompt">Don't have a portal account?</span>
+<a href="#" id="toggle-auth-mode" onclick="toggleAuthMode(event)">Create Account</a>
+</div>
+</form>
+</div>
+</div>
+</section>
+<!-- ==================== VIEW 2: EMPLOYEE PORTAL ==================== -->
+<section class="view-section" id="employee-screen">
+<div class="dashboard-layout">
+<!-- Sidebar -->
+<aside class="sidebar">
+<div class="sidebar-header">
+<img alt="Logo" class="sidebar-logo" src="aditya-birla-group-logo-png_seeklogo-385778.png"/>
+<div class="sidebar-title">
+<h3>Hindalco Employee</h3>
+<span>Renukoot</span>
+</div>
+</div>
+<nav class="sidebar-menu">
+<button class="nav-item active" onclick="switchTab('emp', 'book-opd', this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<polyline points="14 2 14 8 20 8"></polyline>
+<line x1="16" x2="8" y1="13" y2="13"></line>
+<line x1="16" x2="8" y1="17" y2="17"></line>
+<polyline points="10 9 9 9 8 9"></polyline>
+</svg>
+                            Book OPD Appointment
+                        </button>
+<button class="nav-item" onclick="switchTab('emp', 'opd-status', this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 15 15"></polyline>
+</svg>
+                            OPD Status
+                        </button>
+<button class="nav-item" onclick="switchTab('emp', 'diagnostics', this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 2v20"></path>
+<path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+</svg>
+                            Lab Reports &amp; Diagnostics
+                        </button>
+<button class="nav-item" onclick="switchTab('emp', 'diseases', this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+</svg>
+                            Common Diseases &amp; Cures
+                        </button>
+</nav>
+<div class="sidebar-footer">
+<div class="user-pill">
+<div class="user-avatar" id="emp-avatar-initials">JK</div>
+<div class="user-info">
+<span class="user-name" id="emp-user-name">Jaideep Kumar</span>
+<span class="user-role" id="emp-user-role">Grade M-3 | HIND-EMP-4029</span>
+</div>
+</div>
+<button class="logout-btn" onclick="logout()">
+<svg class="logout-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+<polyline points="16 17 21 12 16 7"></polyline>
+<line x1="21" x2="9" y1="12" y2="12"></line>
+</svg>
+                            Logout
+                        </button>
+</div>
+</aside>
+<!-- Sidebar Backdrop Overlay for Mobile -->
+<div class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+<!-- Dashboard Content Area -->
+<main class="main-content">
+<header class="content-header">
+<div style="display: flex; align-items: center;">
+<!-- Mobile Hamburger Menu Button -->
+<button class="mobile-nav-toggle" onclick="toggleMobileSidebar()" style="display: none; background: none; border: none; cursor: pointer; color: var(--clr-text-main); margin-right: 12px; align-items: center; justify-content: center; padding: 4px;" type="button">
+<svg fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;" viewbox="0 0 24 24">
+<line x1="3" x2="21" y1="12" y2="12"></line>
+<line x1="3" x2="21" y1="6" y2="6"></line>
+<line x1="3" x2="21" y1="18" y2="18"></line>
+</svg>
+</button>
+<div>
+<span class="header-breadcrumb">Employee Portal / Overview</span>
+<h2 class="header-title" id="emp-title">Hindalco Employee Portal</h2>
+</div>
+</div>
+<div class="header-actions">
+</div>
+</header>
+<div class="tab-panel" id="emp-tab-opd-status">
+<div class="opd-status-layout">
+<div class="content-card">
+<div class="card-header">
+<h3>OPD Status</h3>
+<button class="card-action-btn" onclick="updateEmployeeDashboard()">Refresh Status</button>
+</div>
+<div id="emp-opd-status-list-container">
+<!-- Dynamic list of queue status items populated from app.js -->
+</div>
+</div>
+</div>
+</div>
+<div class="tab-panel active" id="emp-tab-book-opd">
+<div class="booking-container">
+<div class="booking-form-box" id="emp-family-selection-box">
+<h3>Book For</h3>
+<div class="form-group" style="margin-bottom: 24px;">
+<label style="margin-bottom: 12px; display: block; font-weight: 600; color: var(--clr-text-main);">Select Family Member</label>
+<div class="family-list" style="display: flex; flex-direction: column; gap: 12px;">
+<label class="radio-card" style="display: flex; align-items: center; padding: 16px; border: 1px solid var(--clr-border); border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+<input checked="" name="emp_family_member" style="margin-right: 16px; transform: scale(1.2);" type="radio" value="EMP001-9234"/>
+<div class="card-content" style="display: flex; flex-direction: column;">
+<span class="member-name" style="font-weight: 600; color: var(--clr-text-main);">Jaideep Kumar (Self)</span>
+<span class="member-mr" style="font-size: 0.85rem; color: var(--clr-text-muted); margin-top: 4px;">MR: EMP001-9234</span>
+</div>
+</label>
+<label class="radio-card" style="display: flex; align-items: center; padding: 16px; border: 1px solid var(--clr-border); border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+<input name="emp_family_member" style="margin-right: 16px; transform: scale(1.2);" type="radio" value="EMP001-1452"/>
+<div class="card-content" style="display: flex; flex-direction: column;">
+<span class="member-name" style="font-weight: 600; color: var(--clr-text-main);">Sunita Kumar (Wife)</span>
+<span class="member-mr" style="font-size: 0.85rem; color: var(--clr-text-muted); margin-top: 4px;">MR: EMP001-1452</span>
+</div>
+</label>
+<label class="radio-card" style="display: flex; align-items: center; padding: 16px; border: 1px solid var(--clr-border); border-radius: 8px; cursor: pointer; transition: all 0.2s ease;">
+<input name="emp_family_member" style="margin-right: 16px; transform: scale(1.2);" type="radio" value="EMP001-6789"/>
+<div class="card-content" style="display: flex; flex-direction: column;">
+<span class="member-name" style="font-weight: 600; color: var(--clr-text-main);">Rahul Kumar (Son)</span>
+<span class="member-mr" style="font-size: 0.85rem; color: var(--clr-text-muted); margin-top: 4px;">MR: EMP001-6789</span>
+</div>
+</label>
+</div>
+</div>
+<button class="submit-btn blue-btn" onclick="showEmpBookingForm()" type="button">Continue to Request</button>
+</div>
+<div class="booking-form-box" id="emp-actual-booking-box" style="display: none;">
+<button class="back-btn" onclick="showFamilySelection()" style="background:none; border:none; color:var(--clr-primary); cursor:pointer; margin-bottom:20px; display:flex; align-items:center; font-weight:600; padding:0; font-family: inherit;" type="button">
+<svg fill="none" height="18" stroke="currentColor" stroke-width="2" style="margin-right:6px;" viewbox="0 0 24 24" width="18">
+<line x1="19" x2="5" y1="12" y2="12"></line>
+<polyline points="12 19 5 12 12 5"></polyline>
+</svg>
+                                    Back to Family Selection
+                                </button>
+<h3>Request OPD Appointment</h3>
+<form id="emp-opd-booking-form" onsubmit="handleEmpOPDBooking(event)">
+<div class="form-grid">
+<div class="form-group">
+<label for="emp-booking-dept">Specialty Department</label>
+<select id="emp-booking-dept" onchange="populateEmpDoctorsForDept()" required="">
+<option disabled="" selected="" value="">Select Department</option>
+<option value="General Medicine">General Medicine</option>
+<option value="Dermatology">Dermatology (Cosmetics &amp; Skin)</option>
+<option value="Pediatrics">Pediatrics (Child Care)</option>
+<option value="Orthopedics">Orthopedics</option>
+<option value="Surgery">General Surgery</option>
+</select>
+</div>
+<div class="form-group">
+<label for="emp-booking-doctor">Doctors</label>
+<select id="emp-booking-doctor" required="">
+<option disabled="" selected="" value="">Select Department First</option>
+</select>
+</div>
+</div>
+<button class="submit-btn blue-btn" type="submit">Book Appointment</button>
+</form>
+</div>
+<div class="booking-notice-card">
+<h3>Guidelines</h3>
+<ul class="bullet-list-styled">
+<li>Time slot of booking for morning shift is <strong>7 AM to 8 AM</strong> and evening session from <strong>2 PM to 3 PM</strong>.</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- TAB 4: DIAGNOSTICS & LAB REPORTS (EMPLOYEE) -->
+<div class="tab-panel" id="emp-tab-diagnostics">
+<div class="lab-reports-panel">
+<div class="content-card">
+<h3>My Outpatient Laboratory Records</h3>
+<div class="reports-table-container">
+<table class="data-table">
+<thead>
+<tr>
+<th>Patient Name</th>
+<th>Test Name</th>
+<th>Prescribed By</th>
+<th>Report File</th>
+</tr>
+</thead>
+<tbody id="emp-lab-tbody">
+<tr>
+<td>Jaideep Kumar</td>
+<td><strong>Lipid Profile &amp; Glucose</strong></td>
+<td>Dr. Ajay Sharma</td>
+<td>
+<div class="action-buttons-row" style="display:flex; gap:8px;">
+<button class="download-link-btn" onclick="simulateDownload('Lipid_Sugar_Report.pdf')">
+<svg class="down-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+<polyline points="7 10 12 15 17 10"></polyline>
+<line x1="12" x2="12" y1="15" y2="3"></line>
+</svg>
+                                                            Download PDF
+                                                        </button>
+<button class="submit-btn blue-btn btn-sm" onclick="openReportModal('lipid')" style="padding: 6px 12px; font-size: 0.75rem; width: auto; margin:0;">
+                                                            View Online
+                                                        </button>
+</div>
+</td>
+</tr>
+<tr>
+<td>Jaideep Kumar</td>
+<td><strong>Allergy Sensitivity Panel</strong></td>
+<td>Dr. (Mrs.) R. Singh</td>
+<td>
+<div class="action-buttons-row" style="display:flex; gap:8px;">
+<button class="download-link-btn" onclick="simulateDownload('Allergy_Biopsy_Report.pdf')">
+<svg class="down-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+<polyline points="7 10 12 15 17 10"></polyline>
+<line x1="12" x2="12" y1="15" y2="3"></line>
+</svg>
+                                                            Download PDF
+                                                        </button>
+<button class="submit-btn blue-btn btn-sm" onclick="openReportModal('allergy')" style="padding: 6px 12px; font-size: 0.75rem; width: auto; margin:0;">
+                                                            View Online
+                                                        </button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+                <div class="card mt-20">
+                    <div class="card-header">
+                        <div class="header-title">
+                            <div class="icon-box" style="background: #eef2ff; color: #4f46e5;">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width: 20px; height: 20px;"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                            </div>
+                            <h3>My Prescriptions</h3>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Doctor ID</th>
+                                        <th>Medication</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="emp-prescriptions-tbody">
+                                    <tr><td colspan="4">Loading prescriptions...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+</div>
+</div>
+</div>
+<div class="tab-panel" id="emp-tab-diseases"><div class="medical-care-container"><div class="medical-care-header-box"><h3>Basic Medical Care &amp; Wellness Directory</h3></div><div class="medical-grid-split" style="display: flex; flex-direction: column; gap: 30px;"><div class="content-card" style="width: 100%;"><div class="card-header-styled" style="margin-bottom: 20px;"><h4>Common Health Conditions (South Asian Focus)</h4><span class="pulse-indicator-small" style="background-color: var(--clr-primary)"></span></div><div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));">
+<!-- PCOS / PCOD Card -->
+<div class="content-card">
+<div class="card-header" style="align-items: center;">
+<div style="display: flex; gap: 10px; align-items: center;">
+<div class="card-icon" style="color: var(--clr-primary-dark);"><svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></div>
+<h3 style="margin:0; font-size: 1.15rem; color: var(--clr-primary-dark);">PCOS &amp; PCOD</h3>
+</div>
+</div>
+<div style="margin-top: 15px; font-size: 0.95rem; line-height: 1.6;">
+<p><strong>Detailed Causes:</strong> Polycystic Ovary Syndrome (PCOS) and Disease (PCOD) are deeply linked to hormonal imbalances (excess androgens), genetic predispositions, and low-grade inflammation. Insulin resistance plays a massive role, causing the pancreas to produce more insulin, which in turn spikes androgen production from the ovaries.</p>
+<p><strong>Comprehensive Dietary Guidelines:</strong></p>
+<div class="medical-do-dont-grid" style="grid-template-columns: 1fr 1fr; display: grid; gap: 15px; margin-bottom: 15px;">
+<div class="diet-box" style="background: #ecfdf5; padding: 15px; border-radius: 8px; border-left: 4px solid #10b981;">
+<h5 style="color: #065f46; margin-bottom: 10px;">What to Eat</h5>
+<img alt="Healthy Food" class="diet-graphic" src="assets/images/pcos_food_healthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>High-fiber foods (oats, brown rice, broccoli, lentils).</li>
+<li>Lean proteins (chicken, fish, tofu, legumes).</li>
+<li>Anti-inflammatory healthy fats (walnuts, almonds, olive oil).</li>
+</ul>
+</div>
+<div class="dont-box" style="background: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+<h5 style="color: #991b1b; margin-bottom: 10px;">What NOT to Eat</h5>
+<img alt="Unhealthy Food" class="diet-graphic" src="assets/images/pcos_food_unhealthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Refined sugars (sweets, sodas, white breads).</li>
+<li>Processed foods &amp; saturated fats (fried items, chips).</li>
+<li>Excess commercial dairy &amp; processed meats.</li>
+</ul>
+</div>
+</div>
+<p><strong>Medical Management:</strong> For patients, treatments often involve hormonal birth control to regulate menstrual cycles, Metformin to improve insulin resistance, and anti-androgen medications (like Spironolactone) to reduce acne and excess hair growth. Always consult a gynecologist or endocrinologist before starting.</p>
+</div>
+</div>
+<!-- Thyroid Card -->
+<div class="content-card">
+<div class="card-header" style="align-items: center;">
+<div style="display: flex; gap: 10px; align-items: center;">
+<div class="card-icon" style="color: var(--clr-primary-dark);"><svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4l3 3"></path></svg></div>
+<h3 style="margin:0; font-size: 1.15rem; color: var(--clr-primary-dark);">Thyroid Disorders</h3>
+</div>
+</div>
+<div style="margin-top: 15px; font-size: 0.95rem; line-height: 1.6;">
+<p><strong>Detailed Causes:</strong> Thyroid disorders primarily include Hypothyroidism (underactive) and Hyperthyroidism (overactive). The most common causes are autoimmune diseases (Hashimoto's thyroiditis for hypo, Graves' disease for hyper).</p>
+<p><strong>Comprehensive Dietary Guidelines:</strong></p>
+<div class="medical-do-dont-grid" style="grid-template-columns: 1fr 1fr; display: grid; gap: 15px; margin-bottom: 15px;">
+<div class="diet-box" style="background: #ecfdf5; padding: 15px; border-radius: 8px; border-left: 4px solid #10b981;">
+<h5 style="color: #065f46; margin-bottom: 10px;">What to Eat</h5>
+<img alt="Healthy Food" class="diet-graphic" src="assets/images/thyroid_food_healthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Iodine-rich foods (seaweed, fish, dairy, eggs).</li>
+<li>Selenium sources (Brazil nuts, tuna, sardines).</li>
+<li>Zinc-rich items (oysters, chicken, pumpkin seeds).</li>
+</ul>
+</div>
+<div class="dont-box" style="background: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+<h5 style="color: #991b1b; margin-bottom: 10px;">What NOT to Eat</h5>
+<img alt="Unhealthy Food" class="diet-graphic" src="assets/images/thyroid_food_unhealthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Raw goitrogens (uncooked cabbage, broccoli, soy).</li>
+<li>Highly processed foods.</li>
+<li>Excessive refined sugar and artificial sweeteners.</li>
+</ul>
+</div>
+</div>
+<p><strong>Medical Management:</strong> Hypothyroidism is treated with synthetic thyroid hormone replacements (Levothyroxine). Hyperthyroidism treatments include anti-thyroid medications (Methimazole, Propylthiouracil).</p>
+</div>
+</div>
+<!-- Cardiac Arrest Card -->
+<div class="content-card">
+<div class="card-header" style="align-items: center;">
+<div style="display: flex; gap: 10px; align-items: center;">
+<div class="card-icon" style="color: var(--clr-primary-dark);"><svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg></div>
+<h3 style="margin:0; font-size: 1.15rem; color: var(--clr-primary-dark);">Cardiac Arrest &amp; Heart Health</h3>
+</div>
+</div>
+<div style="margin-top: 15px; font-size: 0.95rem; line-height: 1.6;">
+<p><strong>Detailed Causes:</strong> Cardiac arrest is an electrical malfunction in the heart causing an irregular heartbeat (arrhythmia), leading the heart to suddenly stop pumping. Underlying causes include Coronary Artery Disease (CAD).</p>
+<p><strong>Comprehensive Dietary Guidelines:</strong></p>
+<div class="medical-do-dont-grid" style="grid-template-columns: 1fr 1fr; display: grid; gap: 15px; margin-bottom: 15px;">
+<div class="diet-box" style="background: #ecfdf5; padding: 15px; border-radius: 8px; border-left: 4px solid #10b981;">
+<h5 style="color: #065f46; margin-bottom: 10px;">What to Eat</h5>
+<img alt="Healthy Food" class="diet-graphic" src="assets/images/cardiac_food_healthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Heart-healthy fats (olive oil, avocados).</li>
+<li>Omega-3 rich fish (salmon, mackerel).</li>
+<li>Leafy greens, berries, and whole grains (oats).</li>
+</ul>
+</div>
+<div class="dont-box" style="background: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+<h5 style="color: #991b1b; margin-bottom: 10px;">What NOT to Eat</h5>
+<img alt="Unhealthy Food" class="diet-graphic" src="assets/images/cardiac_food_unhealthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Trans fats and hydrogenated oils.</li>
+<li>Deep-fried foods and highly processed snacks.</li>
+<li>Excessive sodium and sugary beverages.</li>
+</ul>
+</div>
+</div>
+<p><strong>Medical Management:</strong> Preventive care includes Statins (for cholesterol), Aspirin, ACE inhibitors, or Beta-blockers as prescribed by a cardiologist.</p>
+</div>
+</div>
+<!-- Diabetes Card -->
+<div class="content-card">
+<div class="card-header" style="align-items: center;">
+<div style="display: flex; gap: 10px; align-items: center;">
+<div class="card-icon" style="color: var(--clr-primary-dark);"><svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
+<h3 style="margin:0; font-size: 1.15rem; color: var(--clr-primary-dark);">Diabetes (Sugar)</h3>
+</div>
+</div>
+<div style="margin-top: 15px; font-size: 0.95rem; line-height: 1.6;">
+<p><strong>Detailed Causes:</strong> Diabetes mellitus is a metabolic disease causing high blood sugar. Type 2 (most common) involves insulin resistance—where the body cannot effectively use the insulin it produces.</p>
+<p><strong>Comprehensive Dietary Guidelines:</strong></p>
+<div class="medical-do-dont-grid" style="grid-template-columns: 1fr 1fr; display: grid; gap: 15px; margin-bottom: 15px;">
+<div class="diet-box" style="background: #ecfdf5; padding: 15px; border-radius: 8px; border-left: 4px solid #10b981;">
+<h5 style="color: #065f46; margin-bottom: 10px;">What to Eat</h5>
+<img alt="Healthy Food" class="diet-graphic" src="assets/images/food_healthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Low-GI foods (non-starchy vegetables, sweet potatoes).</li>
+<li>Lean proteins (chicken, tofu, lentils).</li>
+<li>High-fiber foods to slow glucose absorption.</li>
+</ul>
+</div>
+<div class="dont-box" style="background: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+<h5 style="color: #991b1b; margin-bottom: 10px;">What NOT to Eat</h5>
+<img alt="Unhealthy Food" class="diet-graphic" src="assets/images/food_unhealthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Refined carbohydrates (white rice, pasta, bread).</li>
+<li>Sugary drinks (sodas, packaged juices).</li>
+<li>Sweets, desserts, and large carb-heavy meals.</li>
+</ul>
+</div>
+</div>
+<p><strong>Medical Management:</strong> Type 1 requires lifelong insulin therapy. Type 2 is managed with lifestyle changes and medications like Metformin.</p>
+</div>
+</div>
+<!-- BP Card -->
+<div class="content-card">
+<div class="card-header" style="align-items: center;">
+<div style="display: flex; gap: 10px; align-items: center;">
+<div class="card-icon" style="color: var(--clr-primary-dark);"><svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M3 3v18h18"></path><path d="M18 17V9l-5 5-4-4-5 5"></path></svg></div>
+<h3 style="margin:0; font-size: 1.15rem; color: var(--clr-primary-dark);">High &amp; Low Blood Pressure</h3>
+</div>
+</div>
+<div style="margin-top: 15px; font-size: 0.95rem; line-height: 1.6;">
+<p><strong>Detailed Causes:</strong> High BP is caused by chronic stress, high sodium, obesity. Low BP is caused by dehydration, severe infections, or nutritional deficiencies.</p>
+<p><strong>Comprehensive Dietary Guidelines:</strong></p>
+<div class="medical-do-dont-grid" style="grid-template-columns: 1fr 1fr; display: grid; gap: 15px; margin-bottom: 15px;">
+<div class="diet-box" style="background: #ecfdf5; padding: 15px; border-radius: 8px; border-left: 4px solid #10b981;">
+<h5 style="color: #065f46; margin-bottom: 10px;">What to Eat</h5>
+<img alt="Healthy Food" class="diet-graphic" src="assets/images/hypertension_food_healthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>The DASH diet: Bananas, spinach, berries (High BP).</li>
+<li>Increase fluid and slightly increase salt (Low BP).</li>
+<li>Potassium and Magnesium-rich foods.</li>
+</ul>
+</div>
+<div class="dont-box" style="background: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+<h5 style="color: #991b1b; margin-bottom: 10px;">What NOT to Eat</h5>
+<img alt="Unhealthy Food" class="diet-graphic" src="assets/images/hypertension_food_unhealthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Excessive sodium (pickles, canned soups, processed meats).</li>
+<li>Excessive caffeine and alcohol.</li>
+<li>Ultra-processed junk food.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div></div><div class="content-card medical-minerals-column">
+<div class="card-header-styled">
+<h4>Dietary Minerals &amp; Calcium Registry</h4>
+<span class="badge badge-success">Nutrition Core</span>
+</div>
+<p class="card-subtitle">Essential minerals needed in the diet, especially for the high rate
+                                of bone density loss and anemia in South Asian populations.</p>
+<div class="minerals-grid" id="medical-minerals-list">
+<!-- Calcium -->
+<div class="mineral-card" data-search="calcium bone density rickets dairy paneer ragi almonds seeds bones osteoporosis teeth minerals">
+<div class="mineral-card-header">
+<h5>Calcium (Ca)</h5>
+<span class="mineral-tag" style="background-color: #d1fae5; color: #065f46;">Bones &amp; Teeth</span>
+</div>
+<p class="mineral-importance"><strong>Why it's vital:</strong> Crucial for skeletal
+                                        strength, muscle function, and nerve transmission. Essential to prevent
+                                        osteoporosis, which is highly common in South Asian women.</p>
+<div class="mineral-sources">
+<strong>Top Food Sources:</strong>
+<span>Dairy (Milk, Paneer, Curd), Ragi (Finger Millet), Almonds, Sesame Seeds
+                                            (Til), and Green Leafy Vegetables (Spinach, Methi).</span>
+</div>
+</div>
+<!-- Iron -->
+<div class="mineral-card" data-search="iron anemia hemoglobin blood vegetarian spinach beetroot lentils legumes fatigue red blood cells minerals">
+<div class="mineral-card-header">
+<h5>Iron (Fe)</h5>
+<span class="mineral-tag" style="background-color: #fee2e2; color: #991b1b;">Oxygen Transport</span>
+</div>
+<p class="mineral-importance"><strong>Why it's vital:</strong> Needed to synthesize
+                                        hemoglobin (which transports oxygen in blood). Extremely critical for South
+                                        Asian women, where iron-deficiency anemia is highly prevalent.</p>
+<div class="mineral-sources">
+<strong>Top Food Sources:</strong>
+<span>Spinach, Lentils (Dals), Chickpeas, Beetroot, Pomegranate, Raisins, and
+                                            Red Meat. <em>Tip: Pair with Vitamin C (lemon juice) to enhance vegetarian
+                                                iron absorption.</em></span>
+</div>
+</div>
+<!-- Magnesium -->
+<div class="mineral-card" data-search="magnesium sleep nerve muscle glucose pumpkin seeds almonds spinach chocolate sugar relaxation minerals">
+<div class="mineral-card-header">
+<h5>Magnesium (Mg)</h5>
+<span class="mineral-tag" style="background-color: #e0f2fe; color: #075985;">Metabolic Support</span>
+</div>
+<p class="mineral-importance"><strong>Why it's vital:</strong> Controls over 300
+                                        biochemical reactions including muscle relaxation, nerve conduction, blood
+                                        pressure, and blood glucose regulation.</p>
+<div class="mineral-sources">
+<strong>Top Food Sources:</strong>
+<span>Pumpkin Seeds, Almonds, Spinach, Bananas, Dark Chocolate, and Whole Grains
+                                            (Quinoa, Brown Rice).</span>
+</div>
+</div>
+<!-- Zinc -->
+<div class="mineral-card" data-search="zinc immunity wound healing enzymes chickpeas seeds cashew nuts skin repair minerals">
+<div class="mineral-card-header">
+<h5>Zinc (Zn)</h5>
+<span class="mineral-tag" style="background-color: #f3e8ff; color: #6b21a8;">Immune Defense</span>
+</div>
+<p class="mineral-importance"><strong>Why it's vital:</strong> Essential for immune
+                                        defense, DNA synthesis, cell division, and rapid wound healing.</p>
+<div class="mineral-sources">
+<strong>Top Food Sources:</strong>
+<span>Chickpeas (Chana), Pumpkin Seeds, Cashew Nuts, Sesame Seeds, Mushrooms,
+                                            Yogurt, and Shellfish.</span>
+</div>
+</div>
+<!-- Potassium -->
+<div class="mineral-card" data-search="potassium blood pressure hypertension sodium balance banana coconut water potatoes heart rhythm minerals">
+<div class="mineral-card-header">
+<h5>Potassium (K)</h5>
+<span class="mineral-tag" style="background-color: #fef3c7; color: #92400e;">Heart &amp; BP Control</span>
+</div>
+<p class="mineral-importance"><strong>Why it's vital:</strong> Offsets the negative
+                                        effects of sodium to control blood pressure levels and maintain healthy heart
+                                        rhythms.</p>
+<div class="mineral-sources">
+<strong>Top Food Sources:</strong>
+<span>Bananas, Coconut Water, Potatoes/Sweet Potatoes, Spinach, Oranges, and
+                                            White Beans.</span>
+</div>
+</div>
+</div>
+</div></div></div></div>
+</main></div>
+<!-- Section 2: Dietary Minerals & Calcium Guide -->
+</section>
+<!-- DOCTOR PORTAL VIEW -->
+
+
+<!-- DOCTOR PORTAL VIEW -->
+<section class="view-section hidden" id="doctor-screen">
+<aside class="sidebar" id="doc-sidebar">
+<div class="sidebar-header">
+<h3>Doctor Portal</h3>
+</div>
+<div class="user-profile">
+<div class="avatar">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+<circle cx="12" cy="7" r="4"></circle>
+</svg>
+</div>
+<div class="user-info">
+<p class="name" id="doc-name">Dr. Name</p>
+<p class="role" style="background: #fee2e2; color: #991b1b; padding: 2px 6px; border-radius: 4px; font-size: 0.75rem;">Medical Staff</p>
+</div>
+</div>
+<nav class="sidebar-menu">
+<button class="nav-item active" onclick="switchTab('doc', 'dashboard', this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+<polyline points="9 22 9 12 15 12 15 22"></polyline>
+</svg>
+                    Clinic Dashboard
+                </button>
+</nav>
+<div class="logout-container">
+<button class="logout-btn" onclick="logout()">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+<polyline points="16 17 21 12 16 7"></polyline>
+<line x1="21" x2="9" y1="12" y2="12"></line>
+</svg>
+                    Logout
+                </button>
+</div>
+</aside>
+<main class="main-content">
+<header class="top-nav">
+<div class="search-bar">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="11" cy="11" r="8"></circle>
+<line x1="21" x2="16.65" y1="21" y2="16.65"></line>
+</svg>
+<input placeholder="Search appointments or patients..." type="text"/>
+</div>
+</header>
+<div class="content-area">
+<div class="tab-panel active" id="doc-tab-dashboard">
+<div class="card-header-styled" style="margin-bottom: 20px;">
+<h4>Clinic Appointments &amp; Lab Reports</h4>
+<span class="badge" style="background: #e0f2fe; color: #0284c7; padding: 4px 8px; border-radius: 4px;">Admin Control</span>
+</div>
+<div class="content-card" style="margin-bottom: 20px;">
+<h4>Pending Appointments</h4>
+<div class="table-container" style="overflow-x: auto;">
+<table class="data-table" style="width: 100%; border-collapse: collapse; margin-top: 10px;">
+<thead>
+<tr style="text-align: left; border-bottom: 2px solid #eee;">
+<th style="padding: 10px;">Token</th>
+<th style="padding: 10px;">Patient ID</th>
+<th style="padding: 10px;">Status</th>
+<th style="padding: 10px;">Action</th>
+</tr>
+</thead>
+<tbody id="doc-appointments-list">
+<tr><td colspan="4" style="text-align: center; padding: 10px;">Loading...</td></tr>
+</tbody>
+</table>
+</div>
+            <!-- NEW DOCTOR FORMS -->
+            <div class="dashboard-grid mt-20" id="doctor-action-forms">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Write Prescription</h3>
+                    </div>
+                    <div class="card-content">
+                        <form id="form-write-prescription" onsubmit="handleWritePrescription(event)" class="booking-form">
+                            <div class="form-group">
+                                <label>Patient User ID</label>
+                                <input type="number" id="presc-user-id" required class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Medication Details</label>
+                                <textarea id="presc-meds" required class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="form-group">
+                                <label>Notes</label>
+                                <textarea id="presc-notes" class="form-control" rows="2"></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn blue-btn">Issue Prescription</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Upload Lab Report</h3>
+                    </div>
+                    <div class="card-content">
+                        <form id="form-upload-lab" onsubmit="handleUploadLabReport(event)" class="booking-form">
+                            <div class="form-group">
+                                <label>Patient User ID</label>
+                                <input type="number" id="lab-user-id" required class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Test Name</label>
+                                <input type="text" id="lab-test-name" required class="form-control" placeholder="e.g. Complete Blood Count">
+                            </div>
+                            <div class="form-group">
+                                <label>Result Value</label>
+                                <input type="text" id="lab-result" required class="form-control" placeholder="e.g. 14.5 g/dL">
+                            </div>
+                            <div class="form-group">
+                                <label>Reference Range</label>
+                                <input type="text" id="lab-ref" class="form-control" placeholder="e.g. 13.0 - 17.0">
+                            </div>
+                            <div class="form-group">
+                                <label>Status</label>
+                                <select id="lab-status" class="form-control">
+                                    <option value="Completed">Completed</option>
+                                    <option value="Pending">Pending</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="submit-btn blue-btn">Upload Report</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Post Announcement</h3>
+                    </div>
+                    <div class="card-content">
+                        <form id="form-post-circular" onsubmit="handlePostCircular(event)" class="booking-form">
+                            <div class="form-group">
+                                <label>Title</label>
+                                <input type="text" id="circ-title" required class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Priority</label>
+                                <select id="circ-priority" class="form-control">
+                                    <option value="low">Low</option>
+                                    <option value="medium">Medium</option>
+                                    <option value="high">High</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>Description</label>
+                                <textarea id="circ-desc" required class="form-control" rows="3"></textarea>
+                            </div>
+                            <button type="submit" class="submit-btn blue-btn">Post Announcement</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- END NEW DOCTOR FORMS -->
+    
+</div>
+<div class="content-card">
+<h4>Upload Lab Report</h4>
+<form id="doc-lab-form" style="display: flex; gap: 10px; align-items: flex-end; margin-top: 10px; flex-wrap: wrap;">
+<div class="input-group" style="flex: 1; min-width: 150px;">
+<label style="display:block; margin-bottom:5px;">Patient ID</label>
+<input id="lab-user-id" required="" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" type="number"/>
+</div>
+<div class="input-group" style="flex: 1; min-width: 150px;">
+<label style="display:block; margin-bottom:5px;">Test Name</label>
+<input id="lab-test-name" required="" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" type="text"/>
+</div>
+<div class="input-group" style="flex: 1; min-width: 150px;">
+<label style="display:block; margin-bottom:5px;">Result Value</label>
+<input id="lab-result" required="" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" type="text"/>
+</div>
+<div class="input-group" style="flex: 1; min-width: 150px;">
+<label style="display:block; margin-bottom:5px;">Reference Range</label>
+<input id="lab-ref" required="" style="width: 100%; padding: 8px; border: 1px solid #ccc; border-radius: 4px;" type="text"/>
+</div>
+<button class="submit-btn" onclick="submitLabReport()" style="padding: 10px 20px; background: #0284c7; color: white; border: none; border-radius: 4px; cursor: pointer; height: fit-content; min-width: 100px;" type="button">Upload</button>
+</form>
+<p id="lab-report-status" style="margin-top: 10px; font-weight: bold; color: green; display: none;">Report uploaded successfully!</p>
+</div>
+</div>
+</div>
+</main>
+</section>
+</div>
+<!-- ==================== VIEW 3: NON-EMPLOYEE PORTAL ==================== -->
+<section class="view-section" id="patient-screen">
+<div class="dashboard-layout">
+<!-- Sidebar -->
+<aside class="sidebar patient-theme">
+<div class="sidebar-header">
+<img alt="Logo" class="sidebar-logo" src="aditya-birla-group-logo-png_seeklogo-385778.png"/>
+<div class="sidebar-title">
+<h3>Patient Portal</h3>
+<span>Renukoot</span>
+</div>
+</div>
+<nav class="sidebar-menu">
+<button class="nav-item active" onclick="switchTab('pat', 'book-opd', this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+<polyline points="14 2 14 8 20 8"></polyline>
+<line x1="16" x2="8" y1="13" y2="13"></line>
+<line x1="16" x2="8" y1="17" y2="17"></line>
+<polyline points="10 9 9 9 8 9"></polyline>
+</svg>
+                            Book OPD Appointment
+                        </button>
+<button class="nav-item" onclick="switchTab('pat', 'opd-status', this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<circle cx="12" cy="12" r="10"></circle>
+<polyline points="12 6 12 12 15 15"></polyline>
+</svg>
+                            OPD Status
+                        </button>
+<button class="nav-item" onclick="switchTab('pat', 'diagnostics', this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M12 2v20"></path>
+<path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path>
+</svg>
+                            Lab Reports &amp; Diagnostics
+                        </button>
+<button class="nav-item" onclick="switchTab('pat', 'diseases', this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
+</svg>
+                            Common Diseases &amp; Cures
+                        </button>
+</nav>
+<div class="sidebar-footer">
+<div class="user-pill">
+<div class="user-avatar pat-avatar" id="pat-avatar-initials">SK</div>
+<div class="user-info">
+<span class="user-name" id="pat-user-name">Suresh Kumar</span>
+<span class="user-role">Non-Employee / Public</span>
+</div>
+</div>
+<button class="logout-btn" onclick="logout()">
+<svg class="logout-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"></path>
+<polyline points="16 17 21 12 16 7"></polyline>
+<line x1="21" x2="9" y1="12" y2="12"></line>
+</svg>
+                            Logout
+                        </button>
+</div>
+</aside>
+<!-- Sidebar Backdrop Overlay for Mobile -->
+<div class="sidebar-overlay" onclick="toggleMobileSidebar()"></div>
+<!-- Dashboard Content Area -->
+<main class="main-content">
+<header class="content-header">
+<div style="display: flex; align-items: center;">
+<!-- Mobile Hamburger Menu Button -->
+<button class="mobile-nav-toggle" onclick="toggleMobileSidebar()" style="display: none; background: none; border: none; cursor: pointer; color: var(--clr-text-main); margin-right: 12px; align-items: center; justify-content: center; padding: 4px;" type="button">
+<svg fill="none" stroke="currentColor" stroke-width="2" style="width: 24px; height: 24px;" viewbox="0 0 24 24">
+<line x1="3" x2="21" y1="12" y2="12"></line>
+<line x1="3" x2="21" y1="6" y2="6"></line>
+<line x1="3" x2="21" y1="18" y2="18"></line>
+</svg>
+</button>
+<div>
+<span class="header-breadcrumb">Patient Portal / Overview</span>
+<h2 class="header-title" id="pat-title">Patient Portal Dashboard</h2>
+</div>
+</div>
+<div class="header-actions">
+</div>
+</header>
+<!-- TAB 1.5: OPD STATUS -->
+<div class="tab-panel" id="pat-tab-opd-status">
+<div class="opd-status-layout">
+<div class="content-card">
+<div class="card-header">
+<h3>OPD Status</h3>
+<button class="card-action-btn" onclick="updatePatientDashboard()">Refresh
+                                        Status</button>
+</div>
+<div id="opd-status-list-container">
+<!-- Dynamic list of queue status items populated from app.js -->
+</div>
+</div>
+</div>
+</div>
+<!-- TAB 2: BOOK OPD APPOINTMENT -->
+<div class="tab-panel active" id="pat-tab-book-opd">
+<div class="booking-container">
+<!-- Step 1: Patient Details -->
+<div class="booking-form-box" id="pat-step-1">
+<h3>Book For (Patient Details)</h3>
+<div class="form-grid">
+<div class="form-group">
+<label for="pat-booking-name">Full Name</label>
+<input id="pat-booking-name" placeholder="Enter patient name" required="" type="text"/>
+</div>
+<div class="form-group">
+<label for="pat-booking-age">Age</label>
+<input id="pat-booking-age" max="120" min="1" placeholder="e.g. 35" required="" type="number"/>
+</div>
+<div class="form-group">
+<label for="pat-booking-gender">Gender</label>
+<select id="pat-booking-gender" required="">
+<option disabled="" selected="" value="">Select Gender</option>
+<option value="Male">Male</option>
+<option value="Female">Female</option>
+<option value="Other">Other</option>
+</select>
+</div>
+</div>
+<button class="submit-btn blue-btn" onclick="goToPatStep2()" type="button">Continue to Doctor Selection</button>
+</div>
+<!-- Step 2: Doctor Selection -->
+<div class="booking-form-box" id="pat-step-2" style="display: none;">
+<button class="back-btn" onclick="goToPatStep1()" style="background:none; border:none; color:var(--clr-primary); cursor:pointer; margin-bottom:20px; display:flex; align-items:center; font-weight:600; padding:0; font-family: inherit;" type="button">
+<svg fill="none" height="18" stroke="currentColor" stroke-width="2" style="margin-right:6px;" viewbox="0 0 24 24" width="18"><line x1="19" x2="5" y1="12" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Details
+                                </button>
+<h3>Select Doctor</h3>
+<div class="form-grid">
+<div class="form-group">
+<label for="booking-dept">Specialty Department</label>
+<select id="booking-dept" onchange="populateDoctorsForDept()" required="">
+<option disabled="" selected="" value="">Select Department</option>
+<option value="General Medicine">General Medicine</option>
+<option value="Dermatology">Dermatology (Cosmetics &amp; Skin)</option>
+<option value="Pediatrics">Pediatrics (Child Care)</option>
+<option value="Orthopedics">Orthopedics</option>
+<option value="Surgery">General Surgery</option>
+</select>
+</div>
+<div class="form-group">
+<label for="booking-doctor">Doctors</label>
+<select id="booking-doctor" required="">
+<option disabled="" selected="" value="">Select Department First</option>
+</select>
+</div>
+</div>
+<div class="form-group" id="payment-method-group" style="margin-top: 15px;">
+<label>Payment Method</label>
+<div style="display: flex; gap: 15px; margin-top: 8px;">
+<label style="display: flex; align-items: center; gap: 6px; font-weight: 500; cursor: pointer;">
+<input checked="" name="pat-pay-method" type="radio" value="pocket"/>
+                                            Pocket (Bal: ₹<span id="pat-pocket-bal-display">500</span>)
+                                        </label>
+<label style="display: flex; align-items: center; gap: 6px; font-weight: 500; cursor: pointer;">
+<input name="pat-pay-method" type="radio" value="upi"/>
+                                            UPI (QR Scan)
+                                        </label>
+</div>
+</div>
+<button class="submit-btn blue-btn" onclick="goToPatStep3()" style="margin-top: 20px;" type="button">Continue to Payment</button>
+</div>
+<!-- Step 3: Payment Gateway -->
+<div class="booking-form-box" id="pat-step-3" style="display: none;">
+<button class="back-btn" id="pat-step-3-back-btn" onclick="goToPatStep2()" style="background:none; border:none; color:var(--clr-primary); cursor:pointer; margin-bottom:20px; display:flex; align-items:center; font-weight:600; padding:0; font-family: inherit;" type="button">
+<svg fill="none" height="18" stroke="currentColor" stroke-width="2" style="margin-right:6px;" viewbox="0 0 24 24" width="18"><line x1="19" x2="5" y1="12" y2="12"></line><polyline points="12 19 5 12 12 5"></polyline></svg> Back to Doctor Selection
+                                </button>
+<h3>Payment Gateway</h3>
+<div id="payment-details-container" style="text-align: center; margin-bottom: 20px;">
+<p id="payment-amount-text" style="font-size: 1.1rem; font-weight: 600; color: var(--clr-text-main); margin-bottom: 10px;">Amount to Pay: <span style="color: var(--clr-primary);">₹150</span></p>
+<div id="payment-qr-section">
+<p style="font-size: 0.9rem; color: var(--clr-text-muted); margin-bottom: 15px;">Scan the QR code below using any UPI app.</p>
+<div style="background: white; padding: 20px; display: inline-block; border-radius: 12px; border: 1px solid var(--clr-border);">
+<img alt="UPI QR Code" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&amp;data=upi://pay?pa=jaikishanji9794@okicici&amp;pn=Jai%20Kishan%20Ji&amp;am=150.00&amp;cu=INR" style="width: 200px; height: 200px;"/>
+</div>
+</div>
+<p style="font-size: 0.85rem; color: var(--clr-text-muted); margin-top: 15px; display: flex; align-items: center; justify-content: center; gap: 8px;">
+<svg fill="none" height="16" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="16"><rect height="11" rx="2" ry="2" width="18" x="3" y="11"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                                        Secured by Cashfree Payments
+                                    </p>
+</div>
+<button class="submit-btn blue-btn" onclick="handleOPDBooking(event)" type="button">Confirm &amp; Book Appointment</button>
+</div>
+<div class="booking-notice-card">
+<h3>Guidelines</h3>
+<ul class="bullet-list-styled">
+<li>Time slot of booking for morning shift is <strong>6:25 AM to 6:45 AM</strong> and evening session from <strong>1:25 PM to 1:55 PM</strong>.</li>
+</ul>
+</div>
+</div>
+</div>
+<!-- TAB 4: DIAGNOSTICS & LAB REPORTS -->
+<div class="tab-panel" id="pat-tab-diagnostics">
+<div class="lab-reports-panel">
+<div class="content-card">
+<h3>My Outpatient Laboratory Records</h3>
+<div class="reports-table-container">
+<table class="data-table">
+<thead>
+<tr>
+<th>Patient Name</th>
+<th>Test Name</th>
+<th>Prescribed By</th>
+<th>Report File</th>
+</tr>
+</thead>
+<tbody id="pat-lab-tbody">
+<tr>
+<td>Suresh Kumar</td>
+<td><strong>Lipid Profile &amp; Glucose</strong></td>
+<td>Dr. Ajay Sharma</td>
+<td>
+<div class="action-buttons-row" style="display:flex; gap:8px;">
+<button class="download-link-btn" onclick="simulateDownload('Lipid_Sugar_Report.pdf')">
+<svg class="down-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+<polyline points="7 10 12 15 17 10"></polyline>
+<line x1="12" x2="12" y1="15" y2="3"></line>
+</svg>
+                                                            Download PDF
+                                                        </button>
+<button class="submit-btn blue-btn btn-sm" onclick="openReportModal('lipid')" style="padding: 6px 12px; font-size: 0.75rem; width: auto; margin:0;">
+                                                            View Online
+                                                        </button>
+</div>
+</td>
+</tr>
+<tr>
+<td>Suresh Kumar</td>
+<td><strong>Allergy Sensitivity Panel</strong></td>
+<td>Dr. (Mrs.) R. Singh</td>
+<td>
+<div class="action-buttons-row" style="display:flex; gap:8px;">
+<button class="download-link-btn" onclick="simulateDownload('Allergy_Biopsy_Report.pdf')">
+<svg class="down-icon" fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+<polyline points="7 10 12 15 17 10"></polyline>
+<line x1="12" x2="12" y1="15" y2="3"></line>
+</svg>
+                                                            Download PDF
+                                                        </button>
+<button class="submit-btn blue-btn btn-sm" onclick="openReportModal('allergy')" style="padding: 6px 12px; font-size: 0.75rem; width: auto; margin:0;">
+                                                            View Online
+                                                        </button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+                <div class="card mt-20">
+                    <div class="card-header">
+                        <div class="header-title">
+                            <div class="icon-box" style="background: #eef2ff; color: #4f46e5;">
+                                <svg fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" style="width: 20px; height: 20px;"><path d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10"></path></svg>
+                            </div>
+                            <h3>My Prescriptions</h3>
+                        </div>
+                    </div>
+                    <div class="card-content">
+                        <div class="table-container">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Date</th>
+                                        <th>Doctor ID</th>
+                                        <th>Medication</th>
+                                        <th>Notes</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="pat-prescriptions-tbody">
+                                    <tr><td colspan="4">Loading prescriptions...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+</div>
+</div>
+</div>
+<!-- TAB 4.5: BASIC MEDICAL CARE -->
+<div class="tab-panel" id="pat-tab-diseases"><div class="medical-care-container"><div class="medical-care-header-box"><h3>Basic Medical Care &amp; Wellness Directory</h3></div><div class="medical-grid-split" style="display: flex; flex-direction: column; gap: 30px;"><div class="content-card" style="width: 100%;"><div class="card-header-styled" style="margin-bottom: 20px;"><h4>Common Health Conditions (South Asian Focus)</h4><span class="pulse-indicator-small" style="background-color: var(--clr-primary)"></span></div><div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));">
+<!-- PCOS / PCOD Card -->
+<div class="content-card">
+<div class="card-header" style="align-items: center;">
+<div style="display: flex; gap: 10px; align-items: center;">
+<div class="card-icon" style="color: var(--clr-primary-dark);"><svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></div>
+<h3 style="margin:0; font-size: 1.15rem; color: var(--clr-primary-dark);">PCOS &amp; PCOD</h3>
+</div>
+</div>
+<div style="margin-top: 15px; font-size: 0.95rem; line-height: 1.6;">
+<p><strong>Detailed Causes:</strong> Polycystic Ovary Syndrome (PCOS) and Disease (PCOD) are deeply linked to hormonal imbalances (excess androgens), genetic predispositions, and low-grade inflammation. Insulin resistance plays a massive role, causing the pancreas to produce more insulin, which in turn spikes androgen production from the ovaries.</p>
+<p><strong>Comprehensive Dietary Guidelines:</strong></p>
+<div class="medical-do-dont-grid" style="grid-template-columns: 1fr 1fr; display: grid; gap: 15px; margin-bottom: 15px;">
+<div class="diet-box" style="background: #ecfdf5; padding: 15px; border-radius: 8px; border-left: 4px solid #10b981;">
+<h5 style="color: #065f46; margin-bottom: 10px;">What to Eat</h5>
+<img alt="Healthy Food" class="diet-graphic" src="assets/images/pcos_food_healthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>High-fiber foods (oats, brown rice, broccoli, lentils).</li>
+<li>Lean proteins (chicken, fish, tofu, legumes).</li>
+<li>Anti-inflammatory healthy fats (walnuts, almonds, olive oil).</li>
+</ul>
+</div>
+<div class="dont-box" style="background: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+<h5 style="color: #991b1b; margin-bottom: 10px;">What NOT to Eat</h5>
+<img alt="Unhealthy Food" class="diet-graphic" src="assets/images/pcos_food_unhealthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Refined sugars (sweets, sodas, white breads).</li>
+<li>Processed foods &amp; saturated fats (fried items, chips).</li>
+<li>Excess commercial dairy &amp; processed meats.</li>
+</ul>
+</div>
+</div>
+<p><strong>Medical Management:</strong> For patients, treatments often involve hormonal birth control to regulate menstrual cycles, Metformin to improve insulin resistance, and anti-androgen medications (like Spironolactone) to reduce acne and excess hair growth. Always consult a gynecologist or endocrinologist before starting.</p>
+</div>
+</div>
+<!-- Thyroid Card -->
+<div class="content-card">
+<div class="card-header" style="align-items: center;">
+<div style="display: flex; gap: 10px; align-items: center;">
+<div class="card-icon" style="color: var(--clr-primary-dark);"><svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24"><circle cx="12" cy="12" r="10"></circle><path d="M12 8v4l3 3"></path></svg></div>
+<h3 style="margin:0; font-size: 1.15rem; color: var(--clr-primary-dark);">Thyroid Disorders</h3>
+</div>
+</div>
+<div style="margin-top: 15px; font-size: 0.95rem; line-height: 1.6;">
+<p><strong>Detailed Causes:</strong> Thyroid disorders primarily include Hypothyroidism (underactive) and Hyperthyroidism (overactive). The most common causes are autoimmune diseases (Hashimoto's thyroiditis for hypo, Graves' disease for hyper).</p>
+<p><strong>Comprehensive Dietary Guidelines:</strong></p>
+<div class="medical-do-dont-grid" style="grid-template-columns: 1fr 1fr; display: grid; gap: 15px; margin-bottom: 15px;">
+<div class="diet-box" style="background: #ecfdf5; padding: 15px; border-radius: 8px; border-left: 4px solid #10b981;">
+<h5 style="color: #065f46; margin-bottom: 10px;">What to Eat</h5>
+<img alt="Healthy Food" class="diet-graphic" src="assets/images/thyroid_food_healthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Iodine-rich foods (seaweed, fish, dairy, eggs).</li>
+<li>Selenium sources (Brazil nuts, tuna, sardines).</li>
+<li>Zinc-rich items (oysters, chicken, pumpkin seeds).</li>
+</ul>
+</div>
+<div class="dont-box" style="background: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+<h5 style="color: #991b1b; margin-bottom: 10px;">What NOT to Eat</h5>
+<img alt="Unhealthy Food" class="diet-graphic" src="assets/images/thyroid_food_unhealthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Raw goitrogens (uncooked cabbage, broccoli, soy).</li>
+<li>Highly processed foods.</li>
+<li>Excessive refined sugar and artificial sweeteners.</li>
+</ul>
+</div>
+</div>
+<p><strong>Medical Management:</strong> Hypothyroidism is treated with synthetic thyroid hormone replacements (Levothyroxine). Hyperthyroidism treatments include anti-thyroid medications (Methimazole, Propylthiouracil).</p>
+</div>
+</div>
+<!-- Cardiac Arrest Card -->
+<div class="content-card">
+<div class="card-header" style="align-items: center;">
+<div style="display: flex; gap: 10px; align-items: center;">
+<div class="card-icon" style="color: var(--clr-primary-dark);"><svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M22 12h-4l-3 9L9 3l-3 9H2"></path></svg></div>
+<h3 style="margin:0; font-size: 1.15rem; color: var(--clr-primary-dark);">Cardiac Arrest &amp; Heart Health</h3>
+</div>
+</div>
+<div style="margin-top: 15px; font-size: 0.95rem; line-height: 1.6;">
+<p><strong>Detailed Causes:</strong> Cardiac arrest is an electrical malfunction in the heart causing an irregular heartbeat (arrhythmia), leading the heart to suddenly stop pumping. Underlying causes include Coronary Artery Disease (CAD).</p>
+<p><strong>Comprehensive Dietary Guidelines:</strong></p>
+<div class="medical-do-dont-grid" style="grid-template-columns: 1fr 1fr; display: grid; gap: 15px; margin-bottom: 15px;">
+<div class="diet-box" style="background: #ecfdf5; padding: 15px; border-radius: 8px; border-left: 4px solid #10b981;">
+<h5 style="color: #065f46; margin-bottom: 10px;">What to Eat</h5>
+<img alt="Healthy Food" class="diet-graphic" src="assets/images/cardiac_food_healthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Heart-healthy fats (olive oil, avocados).</li>
+<li>Omega-3 rich fish (salmon, mackerel).</li>
+<li>Leafy greens, berries, and whole grains (oats).</li>
+</ul>
+</div>
+<div class="dont-box" style="background: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+<h5 style="color: #991b1b; margin-bottom: 10px;">What NOT to Eat</h5>
+<img alt="Unhealthy Food" class="diet-graphic" src="assets/images/cardiac_food_unhealthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Trans fats and hydrogenated oils.</li>
+<li>Deep-fried foods and highly processed snacks.</li>
+<li>Excessive sodium and sugary beverages.</li>
+</ul>
+</div>
+</div>
+<p><strong>Medical Management:</strong> Preventive care includes Statins (for cholesterol), Aspirin, ACE inhibitors, or Beta-blockers as prescribed by a cardiologist.</p>
+</div>
+</div>
+<!-- Diabetes Card -->
+<div class="content-card">
+<div class="card-header" style="align-items: center;">
+<div style="display: flex; gap: 10px; align-items: center;">
+<div class="card-icon" style="color: var(--clr-primary-dark);"><svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"></path></svg></div>
+<h3 style="margin:0; font-size: 1.15rem; color: var(--clr-primary-dark);">Diabetes (Sugar)</h3>
+</div>
+</div>
+<div style="margin-top: 15px; font-size: 0.95rem; line-height: 1.6;">
+<p><strong>Detailed Causes:</strong> Diabetes mellitus is a metabolic disease causing high blood sugar. Type 2 (most common) involves insulin resistance—where the body cannot effectively use the insulin it produces.</p>
+<p><strong>Comprehensive Dietary Guidelines:</strong></p>
+<div class="medical-do-dont-grid" style="grid-template-columns: 1fr 1fr; display: grid; gap: 15px; margin-bottom: 15px;">
+<div class="diet-box" style="background: #ecfdf5; padding: 15px; border-radius: 8px; border-left: 4px solid #10b981;">
+<h5 style="color: #065f46; margin-bottom: 10px;">What to Eat</h5>
+<img alt="Healthy Food" class="diet-graphic" src="assets/images/food_healthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Low-GI foods (non-starchy vegetables, sweet potatoes).</li>
+<li>Lean proteins (chicken, tofu, lentils).</li>
+<li>High-fiber foods to slow glucose absorption.</li>
+</ul>
+</div>
+<div class="dont-box" style="background: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+<h5 style="color: #991b1b; margin-bottom: 10px;">What NOT to Eat</h5>
+<img alt="Unhealthy Food" class="diet-graphic" src="assets/images/food_unhealthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Refined carbohydrates (white rice, pasta, bread).</li>
+<li>Sugary drinks (sodas, packaged juices).</li>
+<li>Sweets, desserts, and large carb-heavy meals.</li>
+</ul>
+</div>
+</div>
+<p><strong>Medical Management:</strong> Type 1 requires lifelong insulin therapy. Type 2 is managed with lifestyle changes and medications like Metformin.</p>
+</div>
+</div>
+<!-- BP Card -->
+<div class="content-card">
+<div class="card-header" style="align-items: center;">
+<div style="display: flex; gap: 10px; align-items: center;">
+<div class="card-icon" style="color: var(--clr-primary-dark);"><svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M3 3v18h18"></path><path d="M18 17V9l-5 5-4-4-5 5"></path></svg></div>
+<h3 style="margin:0; font-size: 1.15rem; color: var(--clr-primary-dark);">High &amp; Low Blood Pressure</h3>
+</div>
+</div>
+<div style="margin-top: 15px; font-size: 0.95rem; line-height: 1.6;">
+<p><strong>Detailed Causes:</strong> High BP is caused by chronic stress, high sodium, obesity. Low BP is caused by dehydration, severe infections, or nutritional deficiencies.</p>
+<p><strong>Comprehensive Dietary Guidelines:</strong></p>
+<div class="medical-do-dont-grid" style="grid-template-columns: 1fr 1fr; display: grid; gap: 15px; margin-bottom: 15px;">
+<div class="diet-box" style="background: #ecfdf5; padding: 15px; border-radius: 8px; border-left: 4px solid #10b981;">
+<h5 style="color: #065f46; margin-bottom: 10px;">What to Eat</h5>
+<img alt="Healthy Food" class="diet-graphic" src="assets/images/hypertension_food_healthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>The DASH diet: Bananas, spinach, berries (High BP).</li>
+<li>Increase fluid and slightly increase salt (Low BP).</li>
+<li>Potassium and Magnesium-rich foods.</li>
+</ul>
+</div>
+<div class="dont-box" style="background: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+<h5 style="color: #991b1b; margin-bottom: 10px;">What NOT to Eat</h5>
+<img alt="Unhealthy Food" class="diet-graphic" src="assets/images/hypertension_food_unhealthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px;"/>
+<ul style="padding-left: 20px;">
+<li>Excessive sodium (pickles, canned soups, processed meats).</li>
+<li>Excessive caffeine and alcohol.</li>
+<li>Ultra-processed junk food.</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div></div><div class="content-card medical-minerals-column">
+<div class="card-header-styled">
+<h4>Dietary Minerals &amp; Calcium Registry</h4>
+<span class="badge badge-success">Nutrition Core</span>
+</div>
+<p class="card-subtitle">Essential minerals needed in the diet, especially for the high rate
+                                of bone density loss and anemia in South Asian populations.</p>
+<div class="minerals-grid" id="medical-minerals-list">
+<!-- Calcium -->
+<div class="mineral-card" data-search="calcium bone density rickets dairy paneer ragi almonds seeds bones osteoporosis teeth minerals">
+<div class="mineral-card-header">
+<h5>Calcium (Ca)</h5>
+<span class="mineral-tag" style="background-color: #d1fae5; color: #065f46;">Bones &amp; Teeth</span>
+</div>
+<p class="mineral-importance"><strong>Why it's vital:</strong> Crucial for skeletal
+                                        strength, muscle function, and nerve transmission. Essential to prevent
+                                        osteoporosis, which is highly common in South Asian women.</p>
+<div class="mineral-sources">
+<strong>Top Food Sources:</strong>
+<span>Dairy (Milk, Paneer, Curd), Ragi (Finger Millet), Almonds, Sesame Seeds
+                                            (Til), and Green Leafy Vegetables (Spinach, Methi).</span>
+</div>
+</div>
+<!-- Iron -->
+<div class="mineral-card" data-search="iron anemia hemoglobin blood vegetarian spinach beetroot lentils legumes fatigue red blood cells minerals">
+<div class="mineral-card-header">
+<h5>Iron (Fe)</h5>
+<span class="mineral-tag" style="background-color: #fee2e2; color: #991b1b;">Oxygen Transport</span>
+</div>
+<p class="mineral-importance"><strong>Why it's vital:</strong> Needed to synthesize
+                                        hemoglobin (which transports oxygen in blood). Extremely critical for South
+                                        Asian women, where iron-deficiency anemia is highly prevalent.</p>
+<div class="mineral-sources">
+<strong>Top Food Sources:</strong>
+<span>Spinach, Lentils (Dals), Chickpeas, Beetroot, Pomegranate, Raisins, and
+                                            Red Meat. <em>Tip: Pair with Vitamin C (lemon juice) to enhance vegetarian
+                                                iron absorption.</em></span>
+</div>
+</div>
+<!-- Magnesium -->
+<div class="mineral-card" data-search="magnesium sleep nerve muscle glucose pumpkin seeds almonds spinach chocolate sugar relaxation minerals">
+<div class="mineral-card-header">
+<h5>Magnesium (Mg)</h5>
+<span class="mineral-tag" style="background-color: #e0f2fe; color: #075985;">Metabolic Support</span>
+</div>
+<p class="mineral-importance"><strong>Why it's vital:</strong> Controls over 300
+                                        biochemical reactions including muscle relaxation, nerve conduction, blood
+                                        pressure, and blood glucose regulation.</p>
+<div class="mineral-sources">
+<strong>Top Food Sources:</strong>
+<span>Pumpkin Seeds, Almonds, Spinach, Bananas, Dark Chocolate, and Whole Grains
+                                            (Quinoa, Brown Rice).</span>
+</div>
+</div>
+<!-- Zinc -->
+<div class="mineral-card" data-search="zinc immunity wound healing enzymes chickpeas seeds cashew nuts skin repair minerals">
+<div class="mineral-card-header">
+<h5>Zinc (Zn)</h5>
+<span class="mineral-tag" style="background-color: #f3e8ff; color: #6b21a8;">Immune Defense</span>
+</div>
+<p class="mineral-importance"><strong>Why it's vital:</strong> Essential for immune
+                                        defense, DNA synthesis, cell division, and rapid wound healing.</p>
+<div class="mineral-sources">
+<strong>Top Food Sources:</strong>
+<span>Chickpeas (Chana), Pumpkin Seeds, Cashew Nuts, Sesame Seeds, Mushrooms,
+                                            Yogurt, and Shellfish.</span>
+</div>
+</div>
+<!-- Potassium -->
+<div class="mineral-card" data-search="potassium blood pressure hypertension sodium balance banana coconut water potatoes heart rhythm minerals">
+<div class="mineral-card-header">
+<h5>Potassium (K)</h5>
+<span class="mineral-tag" style="background-color: #fef3c7; color: #92400e;">Heart &amp; BP Control</span>
+</div>
+<p class="mineral-importance"><strong>Why it's vital:</strong> Offsets the negative
+                                        effects of sodium to control blood pressure levels and maintain healthy heart
+                                        rhythms.</p>
+<div class="mineral-sources">
+<strong>Top Food Sources:</strong>
+<span>Bananas, Coconut Water, Potatoes/Sweet Potatoes, Spinach, Oranges, and
+                                            White Beans.</span>
+</div>
+</div>
+</div>
+</div></div></div></div>
+</main></div>
+<!-- Section 2: Dietary Minerals & Calcium Guide -->
+<!-- TAB 5: GENERAL INFO -->
+<div class="tab-panel" id="pat-tab-general-info">
+<div class="scheme-grid">
+<div class="content-card scheme-status-card">
+<h3>Hindalco Hospital Renukoot</h3>
+<p class="card-subtitle">Public facilities and specialties directory.</p>
+<div class="scheme-details">
+<div class="scheme-row">
+<span>Hospital Category:</span>
+<strong>150-bed Multi-Specialty General Hospital</strong>
+</div>
+<div class="scheme-row">
+<span>Facilities:</span>
+<strong>ICU, Blood Bank, 24/7 Trauma, Pharmacy</strong>
+</div>
+<div class="scheme-row">
+<span>Specialty Focus:</span>
+<strong>General Medicine, Dermatology, Surgery, Pediatrics</strong>
+</div>
+<div class="scheme-row">
+<span>Address:</span>
+<strong>Plant-1 Road, Hindalco Colony, Renukoot, Sonbhadra, U.P.</strong>
+</div>
+</div>
+</div>
+<div class="content-card">
+<h3>General Contacts</h3>
+<div class="scheme-details">
+<div class="scheme-row">
+<span>General OPD Billing:</span>
+<strong>+91-5446-252082</strong>
+</div>
+<div class="scheme-row">
+<span>24/7 Emergency Casualty:</span>
+<strong>+91-8917846704</strong>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Diagnostic Report Modal -->
+<div class="modal-overlay hidden" id="report-modal">
+<div class="modal-card">
+<div class="modal-header">
+<div>
+<h3 id="modal-report-title">Laboratory Diagnostic Report</h3>
+<span class="report-meta-text" id="modal-report-meta">Hindalco Pathology Lab | Date:
+                        15-Jun-2026</span>
+</div>
+<button class="modal-close-btn" onclick="closeReportModal()" type="button">×</button>
+</div>
+<div class="modal-body">
+<div class="report-patient-info">
+<div>Patient: <strong id="modal-patient-name">Suresh Kumar</strong></div>
+<div>Reg ID: <strong id="modal-patient-reg-id">HIND-PAT-1082</strong></div>
+<div>Referred By: <strong id="modal-patient-referred">Dr. Ajay Sharma</strong></div>
+</div>
+<table class="data-table modal-report-table">
+<thead>
+<tr>
+<th>Test Parameter</th>
+<th>Result Value</th>
+<th>Biological Reference Range</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody id="modal-report-tbody">
+<!-- Dynamic rows loaded from app.js -->
+</tbody>
+</table>
+<div class="report-remarks-box">
+<h5>Pathologist Remarks:</h5>
+<p id="modal-report-remarks">Values are within standard biological references. Clinical correlation
+                        is recommended.</p>
+</div>
+</div>
+<div class="modal-footer">
+<button class="download-link-btn" id="modal-download-btn" style="margin: 0; width: auto;">Download
+                    PDF</button>
+<button class="submit-btn blue-btn" onclick="closeReportModal()" style="width:auto; margin: 0;">Close</button>
+</div>
+</div>
+</div>
+<!-- Global Toast Container for Notifications -->
+<div id="toast-container"></div>
+<!-- Core Script Logic -->
+
+        <script src="app.js"></script>
+        <script src="assets/js/api.js"></script>
+        <script src="assets/js/admin.js"></script>
+        <script src="assets/js/doctor.js"></script>
+        <script src="assets/js/pdf.js"></script>
+
+</body>
+</html>

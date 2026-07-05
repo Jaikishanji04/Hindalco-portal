@@ -1,0 +1,11 @@
+.git
+.env
+__pycache__
+*.pyc
+*.pyo
+venv
+.venv
+hindalco.db
+test_hindalco.db
+alembic/versions/*
+.pytest_cache
