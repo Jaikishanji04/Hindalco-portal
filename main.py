@@ -16,6 +16,8 @@ from database import get_db, engine
 
 app = FastAPI(title="Hindalco Hospital API")
 
+# Ensure database tables exist (crucial for Render deployment)
+models.Base.metadata.create_all(bind=engine)
 from fastapi.middleware.cors import CORSMiddleware
 app.add_middleware(
     CORSMiddleware,
