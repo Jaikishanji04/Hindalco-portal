@@ -11,3 +11,4 @@ alembic
 pytest
 httpx
 pytest-asyncio
+psycopg2-binary
