@@ -4,6 +4,16 @@
 
 let currentRole = 'employee'; // Default login selector focus: 'employee' or 'non-employee'
 let isSignupMode = false;
+
+// Override fetch if running via file:// protocol
+const originalFetch = window.fetch;
+window.fetch = async function() {
+    let args = Array.prototype.slice.call(arguments);
+    if (window.location.protocol === 'file:' && typeof args[0] === 'string' && args[0].startsWith('/api/')) {
+        args[0] = 'http://localhost:8000' + args[0];
+    }
+    return originalFetch.apply(this, args);
+};
 let currentUser = null;
 
 // Mock database for users
@@ -930,14 +940,48 @@ async function handleOPDBooking(event) {
             const data = await response.json();
             
             if (data.status === "payment_required") {
-                // Simulate payment gateway redirect for Cashfree
-                const confirmPay = confirm(`Proceed to pay ${data.payment_details.currency} ${data.payment_details.amount} via Cashfree?`);
-                if (confirmPay) {
-                    // Call the verify webhook to simulate successful payment
-                    await fetch(`/api/payments/verify?order_id=${data.payment_details.order_id}&signature=mock_signature`, { method: 'POST' });
-                    alert("Payment successful!");
+                const options = {
+                    key: "mock_key", // Fallback, will fail if no real key
+                    amount: data.payment_details.amount * 100,
+                    currency: data.payment_details.currency,
+                    name: "Hindalco Hospital",
+                    description: "OPD Appointment Fee",
+                    order_id: data.payment_details.razorpay_order_id,
+                    handler: async function (response) {
+                        try {
+                            const verifyRes = await fetch(`/api/payments/verify?order_id=${data.payment_details.order_id}&razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}`, {
+                                method: 'POST',
+                                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('hindalco_token') }
+                            });
+                            if (verifyRes.ok) {
+                                alert("Payment successful!");
+                                document.getElementById('booking-dept').value = '';
+                                document.getElementById('booking-doctor').innerHTML = '<option value="" disabled selected>Select Department First</option>';
+                                await updatePatientDashboard();
+                                switchTab('pat', 'opd-status');
+                            } else {
+                                alert("Payment verification failed.");
+                            }
+                        } catch (e) {
+                            console.error(e);
+                        }
+                    },
+                    prefill: {
+                        name: currentUser.name,
+                        email: currentUser.email || "patient@gmail.com"
+                    },
+                    theme: { color: "#0284c7" }
+                };
+                if (data.payment_details.razorpay_order_id && typeof Razorpay !== 'undefined') {
+                    const rzp = new Razorpay(options);
+                    rzp.open();
                 } else {
-                    alert("Payment cancelled. Appointment is pending payment.");
+                    alert("Razorpay integration missing. Simulating success...");
+                    await fetch(`/api/payments/verify?order_id=${data.payment_details.order_id}&razorpay_payment_id=mock_pay_id&razorpay_order_id=mock_order_id&razorpay_signature=mock_sig`, { method: 'POST', headers: { 'Authorization': 'Bearer ' + localStorage.getItem('hindalco_token') } });
+                    document.getElementById('booking-dept').value = '';
+                    document.getElementById('booking-doctor').innerHTML = '<option value="" disabled selected>Select Department First</option>';
+                    await updatePatientDashboard();
+                    switchTab('pat', 'opd-status');
                 }
             }
             
@@ -1322,9 +1366,16 @@ async function performLogin(username, password) {
         updateHeaderUI('emp');
     } else if (currentUser.role === 'doctor' || currentUser.role === 'admin') {
         document.getElementById('doctor-screen').classList.add('active');
+        if (currentUser.role === 'admin') {
+            const adminForms = document.getElementById('admin-action-forms');
+            if (adminForms) adminForms.style.display = 'grid';
+            document.getElementById('doc-name').innerText = "Admin Portal";
+        } else {
+            document.getElementById('doc-name').innerText = currentUser.name;
+        }
         switchTab('doc', 'dashboard');
         updateHeaderUI('doc');
-        fetchDoctorData();
+        if (typeof fetchDoctorData === 'function') fetchDoctorData();
     } else {
         document.getElementById('patient-screen').classList.add('active');
         switchTab('pat', 'book-opd');
@@ -2061,3 +2112,61 @@ window.handleAuthSubmit = async function(event) {
         }
     }
 };
+/* ==========================================
+   ADMIN ACTIONS
+   ========================================== */
+
+async function handleCreateDoctor(event) {
+    event.preventDefault();
+    const name = document.getElementById('new-doc-name').value;
+    const spec = document.getElementById('new-doc-spec').value;
+    const degree = document.getElementById('new-doc-degree').value;
+    const schedule = document.getElementById('new-doc-schedule').value;
+    
+    try {
+        const res = await fetch('/api/admin/doctors', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('hindalco_token')
+            },
+            body: JSON.stringify({
+                name, specialization: spec, degree, availability_schedule: schedule, is_available: true
+            })
+        });
+        if (res.ok) {
+            alert("Doctor created successfully!");
+            event.target.reset();
+        } else {
+            alert("Failed to create doctor.");
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}
+
+async function handleFundWallet(event) {
+    event.preventDefault();
+    const userId = parseInt(document.getElementById('fund-user-id').value);
+    const amount = parseFloat(document.getElementById('fund-amount').value);
+    
+    try {
+        const res = await fetch('/api/admin/wallet/fund', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': 'Bearer ' + localStorage.getItem('hindalco_token')
+            },
+            body: JSON.stringify({ user_id: userId, amount })
+        });
+        if (res.ok) {
+            const data = await res.json();
+            alert(`Wallet funded! New balance: ${data.new_balance}`);
+            event.target.reset();
+        } else {
+            alert("Failed to fund wallet.");
+        }
+    } catch (e) {
+        console.error(e);
+    }
+}

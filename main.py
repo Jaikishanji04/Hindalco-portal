@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Depends, HTTPException, status, Response
+from fastapi import FastAPI, Depends, HTTPException, status, Response, BackgroundTasks
 import pdf_service
 import email_service
 import payment_service
@@ -13,16 +13,17 @@ import models
 import schemas
 import auth
 from database import get_db, engine
-from cashfree_pg.models.create_order_request import CreateOrderRequest
-from cashfree_pg.api_client import Cashfree
-
-# Note: We won't initialize Cashfree fully since we don't have real keys, 
-# but we will simulate the order creation or leave the code structured for it.
-Cashfree.XClientId = os.getenv("CASHFREE_APP_ID", "TEST_APP_ID")
-Cashfree.XClientSecret = os.getenv("CASHFREE_SECRET_KEY", "TEST_SECRET_KEY")
-Cashfree.XEnvironment = Cashfree.SANDBOX
 
 app = FastAPI(title="Hindalco Hospital API")
+
+from fastapi.middleware.cors import CORSMiddleware
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 # Mount static files to serve the frontend
 # We will do this at the end so it doesn't override API routes.
@@ -101,7 +102,7 @@ def get_appointments(current_user: models.User = Depends(auth.get_current_user),
     return db.query(models.Appointment).filter(models.Appointment.user_id == current_user.id).all()
 
 @app.post("/api/appointments", response_model=dict)
-def create_appointment(app_req: schemas.AppointmentCreate, current_user: models.User = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+def create_appointment(app_req: schemas.AppointmentCreate, background_tasks: BackgroundTasks, current_user: models.User = Depends(auth.get_current_user), db: Session = Depends(get_db)):
     appointment = models.Appointment(
         user_id=current_user.id,
         doctor_id=app_req.doctor_id,
@@ -136,7 +137,7 @@ def create_appointment(app_req: schemas.AppointmentCreate, current_user: models.
         
         doctor = db.query(models.Doctor).filter(models.Doctor.id == appointment.doctor_id).first()
         if doctor:
-            email_service.send_appointment_email(current_user, appointment, doctor)
+            background_tasks.add_task(email_service.send_appointment_email, current_user, appointment, doctor)
             
         return {"status": "success", "appointment": appointment}
     else:
@@ -165,7 +166,7 @@ def create_appointment(app_req: schemas.AppointmentCreate, current_user: models.
         }
 
 @app.post("/api/payments/verify")
-def verify_payment(order_id: str, razorpay_payment_id: str, razorpay_order_id: str, razorpay_signature: str, db: Session = Depends(get_db)):
+def verify_payment(order_id: str, razorpay_payment_id: str, razorpay_order_id: str, razorpay_signature: str, background_tasks: BackgroundTasks, db: Session = Depends(get_db)):
     is_valid = payment_service.verify_signature(razorpay_order_id, razorpay_payment_id, razorpay_signature)
     if not is_valid:
         raise HTTPException(status_code=400, detail="Invalid payment signature")
@@ -187,7 +188,7 @@ def verify_payment(order_id: str, razorpay_payment_id: str, razorpay_order_id: s
                 user = db.query(models.User).filter(models.User.id == appointment.user_id).first()
                 doctor = db.query(models.Doctor).filter(models.Doctor.id == appointment.doctor_id).first()
                 if user and doctor:
-                    email_service.send_appointment_email(user, appointment, doctor)
+                    background_tasks.add_task(email_service.send_appointment_email, user, appointment, doctor)
                 
         return {"status": "success"}
     return {"status": "failed"}
@@ -200,6 +201,33 @@ def get_lab_reports(current_user: models.User = Depends(auth.get_current_user), 
     return db.query(models.LabReport).filter(models.LabReport.user_id == current_user.id).all()
 
 # --- Admin / Doctor Routes ---
+@app.post("/api/admin/doctors", response_model=schemas.Doctor)
+def create_doctor(doc: schemas.DoctorBase, current_user: models.User = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    if current_user.role != 'admin':
+        raise HTTPException(status_code=403, detail="Not authorized")
+    new_doc = models.Doctor(
+        name=doc.name,
+        specialization=doc.specialization,
+        degree=doc.degree,
+        availability_schedule=doc.availability_schedule,
+        is_available=doc.is_available
+    )
+    db.add(new_doc)
+    db.commit()
+    db.refresh(new_doc)
+    return new_doc
+
+@app.post("/api/admin/wallet/fund", response_model=dict)
+def fund_wallet(req: schemas.WalletFundRequest, current_user: models.User = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    if current_user.role != 'admin':
+        raise HTTPException(status_code=403, detail="Not authorized")
+    target_user = db.query(models.User).filter(models.User.id == req.user_id).first()
+    if not target_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    target_user.pocket_balance += req.amount
+    db.commit()
+    return {"status": "success", "new_balance": target_user.pocket_balance}
+
 @app.get("/api/admin/appointments", response_model=list[schemas.Appointment])
 def get_all_appointments(current_user: models.User = Depends(auth.get_current_user), db: Session = Depends(get_db)):
     if current_user.role not in ['doctor', 'admin']:
@@ -220,7 +248,7 @@ def update_appointment_status(appointment_id: int, status: str, current_user: mo
     return {"status": "success"}
 
 @app.post("/api/admin/lab_reports", response_model=schemas.LabReport)
-def create_lab_report(report_req: schemas.LabReportBase, user_id: int, current_user: models.User = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+def create_lab_report(report_req: schemas.LabReportBase, user_id: int, background_tasks: BackgroundTasks, current_user: models.User = Depends(auth.get_current_user), db: Session = Depends(get_db)):
     if current_user.role not in ['doctor', 'admin']:
         raise HTTPException(status_code=403, detail="Not authorized")
     
@@ -237,7 +265,7 @@ def create_lab_report(report_req: schemas.LabReportBase, user_id: int, current_u
     
     user = db.query(models.User).filter(models.User.id == user_id).first()
     if user:
-        email_service.send_lab_report_email(user, report)
+        background_tasks.add_task(email_service.send_lab_report_email, user, report)
         
     return report
 

@@ -20,9 +20,19 @@ if config.config_file_name is not None:
 # target_metadata = mymodel.Base.metadata
 import sys
 import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
 sys.path.insert(0, os.path.dirname(os.path.dirname(__file__)))
 from models import Base
 target_metadata = Base.metadata
+
+def get_url():
+    url = os.getenv("DATABASE_URL", config.get_main_option("sqlalchemy.url"))
+    if url and url.startswith("postgres://"):
+        url = url.replace("postgres://", "postgresql://", 1)
+    return url
 
 # other values from the config, defined by the needs of env.py,
 # can be acquired:
@@ -42,18 +52,7 @@ def run_migrations_offline() -> None:
     script output.
 
     """
-    import os
-from dotenv import load_dotenv
-
-load_dotenv()
-
-def get_url():
-    url = os.getenv("DATABASE_URL", config.get_main_option("sqlalchemy.url"))
-    if url.startswith("postgres://"):
-        url = url.replace("postgres://", "postgresql://", 1)
-    return url
-
-url = get_url()
+    url = get_url()
     context.configure(
         url=url,
         target_metadata=target_metadata,

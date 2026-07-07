@@ -10,6 +10,7 @@
 <link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&amp;display=swap" rel="stylesheet"/>
 <link href="style.css" rel="stylesheet"/>
+<script src="https://checkout.razorpay.com/v1/checkout.js"></script>
 </head>
 <body>
 <!-- Main Application Wrapper -->
@@ -815,6 +816,56 @@
                 </div>
             </div>
             <!-- END NEW DOCTOR FORMS -->
+
+            <!-- ADMIN ONLY FORMS -->
+            <div class="dashboard-grid mt-20 admin-only-forms" style="display: none;" id="admin-action-forms">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Create Doctor Profile</h3>
+                    </div>
+                    <div class="card-content">
+                        <form id="form-create-doctor" onsubmit="handleCreateDoctor(event)" class="booking-form">
+                            <div class="form-group">
+                                <label>Doctor Name</label>
+                                <input type="text" id="new-doc-name" required class="form-control" placeholder="Dr. Smith">
+                            </div>
+                            <div class="form-group">
+                                <label>Specialization</label>
+                                <input type="text" id="new-doc-spec" required class="form-control" placeholder="Cardiology">
+                            </div>
+                            <div class="form-group">
+                                <label>Degree</label>
+                                <input type="text" id="new-doc-degree" required class="form-control" placeholder="MBBS, MD">
+                            </div>
+                            <div class="form-group">
+                                <label>Availability Schedule</label>
+                                <input type="text" id="new-doc-schedule" required class="form-control" placeholder="Mon-Fri 9AM-5PM">
+                            </div>
+                            <button type="submit" class="submit-btn blue-btn">Create Doctor</button>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Fund Employee Wallet</h3>
+                    </div>
+                    <div class="card-content">
+                        <form id="form-fund-wallet" onsubmit="handleFundWallet(event)" class="booking-form">
+                            <div class="form-group">
+                                <label>Employee User ID</label>
+                                <input type="number" id="fund-user-id" required class="form-control">
+                            </div>
+                            <div class="form-group">
+                                <label>Amount (₹)</label>
+                                <input type="number" id="fund-amount" required class="form-control" placeholder="200">
+                            </div>
+                            <button type="submit" class="submit-btn blue-btn">Add Funds</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- END ADMIN ONLY FORMS -->
     
 </div>
 <div class="content-card">

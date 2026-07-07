@@ -1,0 +1,10 @@
+__pycache__/
+*.py[cod]
+*$py.class
+*.sqlite
+*.db
+hindalco.db
+test_hindalco.db
+.env
+venv/
+.pytest_cache/

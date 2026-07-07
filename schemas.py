@@ -1,4 +1,4 @@
-from pydantic import BaseModel
+from pydantic import BaseModel, ConfigDict
 from typing import Optional, List
 from datetime import datetime
 
@@ -26,8 +26,11 @@ class User(UserBase):
     id: int
     pocket_balance: float
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
+
+class WalletFundRequest(BaseModel):
+    user_id: int
+    amount: float
 
 # --- Doctor Schemas ---
 class DoctorBase(BaseModel):
@@ -40,8 +43,7 @@ class DoctorBase(BaseModel):
 class Doctor(DoctorBase):
     id: int
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Appointment Schemas ---
 class AppointmentCreate(BaseModel):
@@ -56,8 +58,7 @@ class Appointment(AppointmentCreate):
     token_number: Optional[str] = None
     status: str
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Circular Schemas ---
 class CircularBase(BaseModel):
@@ -73,8 +74,7 @@ class Circular(CircularBase):
     id: int
     date_posted: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Payment Schemas ---
 class PaymentCreate(BaseModel):
@@ -90,8 +90,7 @@ class Payment(PaymentCreate):
     gateway_transaction_id: Optional[str] = None
     created_at: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 # --- Lab Report Schemas ---
 class LabReportBase(BaseModel):
@@ -105,8 +104,7 @@ class LabReport(LabReportBase):
     user_id: int
     date: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
 
 
 # --- Prescription Schemas ---
@@ -123,5 +121,4 @@ class Prescription(PrescriptionBase):
     doctor_id: int
     date: datetime
 
-    class Config:
-        from_attributes = True
+    model_config = ConfigDict(from_attributes=True)
