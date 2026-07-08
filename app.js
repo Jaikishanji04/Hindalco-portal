@@ -83,9 +83,9 @@ document.addEventListener('DOMContentLoaded', async () => {
     // Set default login role view toggle
     setRole('employee');
     
-    // Restore session from localStorage if exists
-    const storedUser = localStorage.getItem('currentUser');
-    const storedRole = localStorage.getItem('currentRole');
+    // Restore session from sessionStorage if exists
+    const storedUser = sessionStorage.getItem('currentUser');
+    const storedRole = sessionStorage.getItem('currentRole');
     if (storedUser && storedRole) {
         currentRole = storedRole;
         setRole(storedRole);
@@ -209,9 +209,9 @@ function toggleAuthMode(event) {
 function loginUser(user) {
     currentUser = user;
     
-    // Save to localStorage for session persistence
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    localStorage.setItem('currentRole', currentRole);
+    // Save to sessionStorage for session persistence
+    sessionStorage.setItem('currentUser', JSON.stringify(user));
+    sessionStorage.setItem('currentRole', currentRole);
     
     // Smooth transition
     document.getElementById('auth-screen').classList.remove('active');
@@ -281,8 +281,8 @@ function loginUser(user) {
 // Logout session
 function logout() {
     currentUser = null;
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('currentRole');
+    sessionStorage.removeItem('currentUser');
+    sessionStorage.removeItem('currentRole');
     
     // Close dashboards, return to auth screen
     document.getElementById('employee-screen').classList.remove('active');
@@ -951,7 +951,7 @@ async function handleOPDBooking(event) {
                         try {
                             const verifyRes = await fetch(`/api/payments/verify?order_id=${data.payment_details.order_id}&razorpay_payment_id=${response.razorpay_payment_id}&razorpay_order_id=${response.razorpay_order_id}&razorpay_signature=${response.razorpay_signature}`, {
                                 method: 'POST',
-                                headers: { 'Authorization': 'Bearer ' + localStorage.getItem('hindalco_token') }
+                                headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('hindalco_token') }
                             });
                             if (verifyRes.ok) {
                                 alert("Payment successful!");
@@ -977,7 +977,7 @@ async function handleOPDBooking(event) {
                     rzp.open();
                 } else {
                     alert("Razorpay integration missing. Simulating success...");
-                    await fetch(`/api/payments/verify?order_id=${data.payment_details.order_id}&razorpay_payment_id=mock_pay_id&razorpay_order_id=mock_order_id&razorpay_signature=mock_sig`, { method: 'POST', headers: { 'Authorization': 'Bearer ' + localStorage.getItem('hindalco_token') } });
+                    await fetch(`/api/payments/verify?order_id=${data.payment_details.order_id}&razorpay_payment_id=mock_pay_id&razorpay_order_id=mock_order_id&razorpay_signature=mock_sig`, { method: 'POST', headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('hindalco_token') } });
                     document.getElementById('booking-dept').value = '';
                     document.getElementById('booking-doctor').innerHTML = '<option value="" disabled selected>Select Department First</option>';
                     await updatePatientDashboard();
@@ -1347,14 +1347,14 @@ async function performLogin(username, password) {
         throw new Error('Invalid credentials');
     }
     const data = await res.json();
-    localStorage.setItem('hindalco_token', data.access_token);
+    sessionStorage.setItem('hindalco_token', data.access_token);
     
     // Fetch user details
     const meRes = await fetch('/api/auth/me', {
         headers: { 'Authorization': 'Bearer ' + data.access_token }
     });
     const userData = await meRes.json();
-    localStorage.setItem('hindalco_user', JSON.stringify(userData));
+    sessionStorage.setItem('hindalco_user', JSON.stringify(userData));
     currentUser = userData;
     
     // Transition to appropriate view
@@ -1386,8 +1386,8 @@ async function performLogin(username, password) {
 }
 
 function logout() {
-    localStorage.removeItem('hindalco_token');
-    localStorage.removeItem('hindalco_user');
+    sessionStorage.removeItem('hindalco_token');
+    sessionStorage.removeItem('hindalco_user');
     currentUser = null;
     
     document.getElementById('employee-screen').classList.remove('active');
@@ -1407,7 +1407,7 @@ function logout() {
 async function fetchDoctorData() {
     try {
         const res = await fetch('/api/admin/appointments', {
-            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('hindalco_token') }
+            headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('hindalco_token') }
         });
         if (!res.ok) throw new Error("Failed to fetch appointments");
         const appts = await res.json();
@@ -1443,7 +1443,7 @@ async function updateAppointmentStatus(id, status) {
     try {
         const res = await fetch(`/api/admin/appointments/${id}?status=${status}`, {
             method: 'PUT',
-            headers: { 'Authorization': 'Bearer ' + localStorage.getItem('hindalco_token') }
+            headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('hindalco_token') }
         });
         if (res.ok) {
             fetchDoctorData();
@@ -1476,7 +1476,7 @@ async function submitLabReport() {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('hindalco_token')
+                'Authorization': 'Bearer ' + sessionStorage.getItem('hindalco_token')
             },
             body: JSON.stringify(payload)
         });
@@ -1800,14 +1800,14 @@ async function performLogin(username, password) {
         throw new Error('Invalid credentials');
     }
     const data = await res.json();
-    localStorage.setItem('hindalco_token', data.access_token);
+    sessionStorage.setItem('hindalco_token', data.access_token);
     
     // Fetch user details
     const meRes = await fetch('/api/auth/me', {
         headers: { 'Authorization': 'Bearer ' + data.access_token }
     });
     const userData = await meRes.json();
-    localStorage.setItem('hindalco_user', JSON.stringify(userData));
+    sessionStorage.setItem('hindalco_user', JSON.stringify(userData));
     currentUser = userData;
     
     // Transition to appropriate view
@@ -1832,8 +1832,8 @@ async function performLogin(username, password) {
 }
 
 function logout() {
-    localStorage.removeItem('hindalco_token');
-    localStorage.removeItem('hindalco_user');
+    sessionStorage.removeItem('hindalco_token');
+    sessionStorage.removeItem('hindalco_user');
     currentUser = null;
     
     document.getElementById('emp-view').classList.add('hidden');
@@ -1852,7 +1852,7 @@ function logout() {
 // OVERRIDE LOGOUT TO FIX DUPLICATES AND ERRORS
 window.logout = function() {
     console.log("Logout triggered");
-    localStorage.removeItem('user');
+    sessionStorage.removeItem('user');
     sessionStorage.clear();
     
     const screens = document.querySelectorAll('.view-section');
@@ -1879,14 +1879,14 @@ window.performLogin = async function(username, password) {
         throw new Error('Invalid credentials');
     }
     const data = await res.json();
-    localStorage.setItem('hindalco_token', data.access_token);
+    sessionStorage.setItem('hindalco_token', data.access_token);
     
     // Fetch user details
     const meRes = await fetch('/api/auth/me', {
         headers: { 'Authorization': 'Bearer ' + data.access_token }
     });
     const userData = await meRes.json();
-    localStorage.setItem('hindalco_user', JSON.stringify(userData));
+    sessionStorage.setItem('hindalco_user', JSON.stringify(userData));
     currentUser = userData;
     
     // Transition to appropriate view
@@ -2003,14 +2003,14 @@ window.performLogin = async function(username, password) {
         throw new Error('Invalid credentials');
     }
     const data = await res.json();
-    localStorage.setItem('hindalco_token', data.access_token);
+    sessionStorage.setItem('hindalco_token', data.access_token);
     
     // Fetch user details
     const meRes = await fetch('/api/auth/me', {
         headers: { 'Authorization': 'Bearer ' + data.access_token }
     });
     const userData = await meRes.json();
-    localStorage.setItem('hindalco_user', JSON.stringify(userData));
+    sessionStorage.setItem('hindalco_user', JSON.stringify(userData));
     
     // Update global variables
     window.currentUser = userData;
@@ -2128,7 +2128,7 @@ async function handleCreateDoctor(event) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('hindalco_token')
+                'Authorization': 'Bearer ' + sessionStorage.getItem('hindalco_token')
             },
             body: JSON.stringify({
                 name, specialization: spec, degree, availability_schedule: schedule, is_available: true
@@ -2155,7 +2155,7 @@ async function handleFundWallet(event) {
             method: 'POST',
             headers: {
                 'Content-Type': 'application/json',
-                'Authorization': 'Bearer ' + localStorage.getItem('hindalco_token')
+                'Authorization': 'Bearer ' + sessionStorage.getItem('hindalco_token')
             },
             body: JSON.stringify({ user_id: userId, amount })
         });
