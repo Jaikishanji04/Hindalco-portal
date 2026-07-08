@@ -944,3 +944,77 @@ body {
         padding: 1rem;
     }
 }
+
+/* --- COMPREHENSIVE MOBILE FIXES --- */
+@media (max-width: 768px) {
+    /* Layout & Spacing */
+    .dashboard-layout {
+        display: block !important;
+    }
+    .main-content {
+        padding: 15px !important;
+        margin-left: 0 !important;
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+    
+    /* Typography Scaling */
+    h1 { font-size: 1.8rem !important; }
+    h2 { font-size: 1.5rem !important; }
+    h3 { font-size: 1.2rem !important; }
+    
+    /* Cards and Grids */
+    .dashboard-grid {
+        grid-template-columns: 1fr !important;
+        gap: 15px !important;
+    }
+    .content-card, .booking-form-box, .stat-card {
+        padding: 15px !important;
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+    
+    /* Forms & Inputs */
+    input, select, textarea, button {
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+    .form-group {
+        margin-bottom: 15px;
+    }
+    
+    /* Tables */
+    .table-container {
+        overflow-x: auto !important;
+        -webkit-overflow-scrolling: touch;
+        border: 1px solid var(--surface-border);
+        border-radius: 8px;
+    }
+    table {
+        min-width: 600px; /* Forces scroll on small screens */
+    }
+    
+    /* Auth Screens */
+    .auth-card-container {
+        padding: 10px !important;
+    }
+    .auth-card {
+        padding: 20px !important;
+        width: 100% !important;
+        box-sizing: border-box;
+    }
+    .auth-grid {
+        grid-template-columns: 1fr !important;
+    }
+    .auth-left { display: none !important; } /* Hide illustration on mobile */
+    
+    /* Navbar / Header */
+    header {
+        padding: 10px 15px !important;
+        flex-wrap: wrap;
+    }
+    .mobile-nav-toggle {
+        display: flex !important;
+        z-index: 1001;
+    }
+}
