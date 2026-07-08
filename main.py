@@ -16,6 +16,16 @@ from database import get_db, engine
 
 app = FastAPI(title="Hindalco Hospital API")
 
+from fastapi.responses import JSONResponse
+import traceback
+
+@app.exception_handler(Exception)
+async def global_exception_handler(request, exc):
+    return JSONResponse(
+        status_code=500,
+        content={"detail": f"Internal Server Error: {str(exc)}", "traceback": traceback.format_exc()}
+    )
+
 # Ensure database tables exist (crucial for Render deployment)
 models.Base.metadata.create_all(bind=engine)
 from fastapi.middleware.cors import CORSMiddleware
