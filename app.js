@@ -348,8 +348,8 @@ function switchTab(portalPrefix, tabId, navButtonElement = null) {
     if (activeContainer) {
         const sidebar = activeContainer.querySelector('.sidebar');
         const overlay = activeContainer.querySelector('.sidebar-overlay');
-        if (sidebar) sidebar.classList.remove('mobile-open');
-        if (overlay) overlay.classList.remove('active');
+        if (sidebar) sidebar.classList.remove('open');
+        if (overlay) overlay.classList.remove('show');
     }
 }
 
@@ -362,8 +362,8 @@ function toggleMobileSidebar() {
     const overlay = activeScreen.querySelector('.sidebar-overlay');
     
     if (sidebar && overlay) {
-        sidebar.classList.toggle('mobile-open');
-        overlay.classList.toggle('active');
+        sidebar.classList.toggle('open');
+        overlay.classList.toggle('show');
     }
 }
 
