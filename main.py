@@ -41,6 +41,26 @@ app.add_middleware(
 # We will do this at the end so it doesn't override API routes.
 
 # --- Auth Routes ---
+@app.get("/api/seed_doctors")
+def seed_doctors_from_apex(db: Session = Depends(get_db)):
+    # Doctors extracted from Oracle APEX screenshot
+    apex_doctors = [
+        models.Doctor(name="SHOBHIT SRIVASTAVA", specialization="ENT", degree="MS", availability_schedule="Mon-Sat", is_available=True),
+        models.Doctor(name="SWATI .", specialization="General Medicine", degree="MD", availability_schedule="Mon-Sat", is_available=True),
+        models.Doctor(name="NEELAM TRIPATHI", specialization="General Medicine", degree="MD", availability_schedule="Mon-Sat", is_available=False),
+        models.Doctor(name="AMIYA NATH PANDEY", specialization="General Medicine", degree="MD", availability_schedule="Mon-Sat", is_available=True)
+    ]
+    
+    # Check if already seeded to avoid duplicates
+    existing = db.query(models.Doctor).count()
+    if existing < len(apex_doctors):
+        # Insert them
+        db.add_all(apex_doctors)
+        db.commit()
+        return {"status": "success", "message": f"Successfully added {len(apex_doctors)} doctors from APEX portal to the database!"}
+    
+    return {"status": "info", "message": "Doctors were already added previously."}
+
 @app.post("/api/auth/register", response_model=schemas.User)
 def register(user: schemas.UserCreate, db: Session = Depends(get_db)):
     if user.role == 'doctor':
