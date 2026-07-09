@@ -488,12 +488,14 @@ function renderEmployeeOPDQueueStatus() {
     
     container.innerHTML = '';
     
-    if (employeeAppointments.length === 0) {
+    const activeEmployeeApps = employeeAppointments.filter(app => app.payment_status !== 'pending' && app.status !== 'pending');
+    
+    if (activeEmployeeApps.length === 0) {
         container.innerHTML = `<div class="empty-state">No active OPD consultation queues. Please book an appointment to begin tracking.</div>`;
         return;
     }
     
-    employeeAppointments.forEach((app, idx) => {
+    activeEmployeeApps.forEach((app, idx) => {
         let currentStep = app.checkedIn ? 3 : 1; 
         
         let queueText = '';
@@ -699,12 +701,14 @@ function renderPatientOPDQueueStatus() {
     
     container.innerHTML = '';
     
-    if (patientAppointments.length === 0) {
+    const activePatientApps = patientAppointments.filter(app => app.payment_status !== 'pending' && app.status !== 'pending');
+
+    if (activePatientApps.length === 0) {
         container.innerHTML = `<div class="empty-state">No active OPD consultation queues. Please book an appointment to begin tracking.</div>`;
         return;
     }
     
-    patientAppointments.forEach((app, idx) => {
+    activePatientApps.forEach((app, idx) => {
         // Generate mock progress step indices for display:
         // The first appointment in the list can simulate "In Queue" or "Checked-In"
         // If they checked in during session, let's say it is step 3. Else default to step 1 (Token Issued).
