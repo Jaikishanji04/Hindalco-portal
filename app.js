@@ -1990,6 +1990,38 @@ window.handleAuthSubmit = async function(event) {
 // --- FINAL LOGIN FLOW FIX ---
 window.performLogin = async function(username, password) {
     const expectedRole = window.currentRole || 'non-employee';
+    
+    // --- MOCK DOCTOR LOGIN ---
+    if (expectedRole === 'doctor') {
+        if (username === 'doctor@hindalco.com' && password === 'doctor123') {
+            const mockDoctorData = {
+                id: 999,
+                name: 'Dr. Admin Mock',
+                email: 'doctor@hindalco.com',
+                role: 'doctor',
+                title: 'Chief Medical Officer'
+            };
+            sessionStorage.setItem('hindalco_token', 'mock_doctor_token_123');
+            sessionStorage.setItem('hindalco_user', JSON.stringify(mockDoctorData));
+            window.currentUser = mockDoctorData;
+            window.currentRole = 'doctor';
+            
+            // Route explicitly to doctor portal (bypassing loginUser which is broken for doctors)
+            const authScreen = document.getElementById('auth-screen');
+            if (authScreen) authScreen.classList.remove('active');
+            const docScreen = document.getElementById('doctor-screen');
+            if (docScreen) docScreen.classList.add('active');
+            document.getElementById('doc-name').innerText = mockDoctorData.name;
+            switchTab('doc', 'dashboard');
+            
+            if (typeof initData === 'function') initData();
+            return;
+        } else {
+            throw new Error('Invalid Doctor credentials. Please use doctor@hindalco.com / doctor123');
+        }
+    }
+    // --- END MOCK DOCTOR LOGIN ---
+
     const formData = new URLSearchParams();
     formData.append('username', username);
     formData.append('password', password);
