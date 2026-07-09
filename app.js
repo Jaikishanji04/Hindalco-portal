@@ -1989,11 +1989,11 @@ window.handleAuthSubmit = async function(event) {
 
 // --- FINAL LOGIN FLOW FIX ---
 window.performLogin = async function(username, password) {
-    const expectedRole = window.currentRole || 'non-employee';
+    const expectedRole = (typeof currentRole !== 'undefined') ? currentRole : (window.currentRole || 'non-employee');
     
     // --- MOCK DOCTOR LOGIN ---
     if (expectedRole === 'doctor') {
-        if (username === 'doctor@hindalco.com' && password === 'doctor123') {
+        if (username.trim().toLowerCase() === 'doctor@hindalco.com' && password.trim() === 'doctor123') {
             const mockDoctorData = {
                 id: 999,
                 name: 'Dr. Admin Mock',
