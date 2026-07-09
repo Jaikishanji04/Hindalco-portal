@@ -1004,28 +1004,54 @@
 <div class="tab-panel active" id="pat-tab-book-opd">
 <div class="booking-container">
 <!-- Step 1: Patient Details -->
-<div class="booking-form-box" id="pat-step-1">
-<h3>Book For (Patient Details)</h3>
-<div class="form-grid">
-<div class="form-group">
-<label for="pat-booking-name">Full Name</label>
-<input id="pat-booking-name" placeholder="Enter patient name" required="" type="text"/>
-</div>
-<div class="form-group">
-<label for="pat-booking-age">Age</label>
-<input id="pat-booking-age" max="120" min="1" placeholder="e.g. 35" required="" type="number"/>
-</div>
-<div class="form-group">
-<label for="pat-booking-gender">Gender</label>
-<select id="pat-booking-gender" required="">
-<option disabled="" selected="" value="">Select Gender</option>
-<option value="Male">Male</option>
-<option value="Female">Female</option>
-<option value="Other">Other</option>
-</select>
-</div>
-</div>
-<button class="submit-btn blue-btn" onclick="goToPatStep2()" type="button">Continue to Doctor Selection</button>
+<div class="booking-form-box" id="pat-step-1" style="padding: 2.5rem; background: linear-gradient(to bottom right, #ffffff, #f8fafc);">
+    <div style="margin-bottom: 2rem;">
+        <h3 style="font-size: 1.6rem; color: var(--clr-primary); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 10px;">
+            <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+            Patient Details
+        </h3>
+        <p style="color: var(--clr-text-muted); font-size: 1.05rem;">Please provide the patient's information to begin the booking process.</p>
+    </div>
+    
+    <div class="form-grid" style="grid-template-columns: 1fr; gap: 1.8rem;">
+        <div class="form-group">
+            <label for="pat-booking-name" style="font-size: 1.15rem; font-weight: 600; display: flex; align-items: center; gap: 8px; color: var(--clr-text-main); margin-bottom: 12px;">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--clr-primary)" stroke-width="2.5"><path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                Full Name
+            </label>
+            <input id="pat-booking-name" placeholder="Enter patient name" required="" type="text" style="font-size: 1.15rem; padding: 16px; border-radius: 12px; border: 2px solid rgba(0,0,0,0.06); background: white; transition: all 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); width: 100%;"/>
+        </div>
+        
+        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1.8rem;">
+            <div class="form-group">
+                <label for="pat-booking-age" style="font-size: 1.15rem; font-weight: 600; display: flex; align-items: center; gap: 8px; color: var(--clr-text-main); margin-bottom: 12px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--clr-primary)" stroke-width="2.5"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    Age
+                </label>
+                <input id="pat-booking-age" max="120" min="1" placeholder="e.g. 35" required="" type="number" style="font-size: 1.15rem; padding: 16px; border-radius: 12px; border: 2px solid rgba(0,0,0,0.06); background: white; transition: all 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); width: 100%;"/>
+            </div>
+            
+            <div class="form-group">
+                <label for="pat-booking-gender" style="font-size: 1.15rem; font-weight: 600; display: flex; align-items: center; gap: 8px; color: var(--clr-text-main); margin-bottom: 12px;">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="var(--clr-primary)" stroke-width="2.5"><path d="M12 22v-7l-2-2"></path><path d="M12 15l2-2"></path><circle cx="12" cy="7" r="4"></circle></svg>
+                    Gender
+                </label>
+                <select id="pat-booking-gender" required="" style="font-size: 1.15rem; padding: 16px; border-radius: 12px; border: 2px solid rgba(0,0,0,0.06); background: white; transition: all 0.3s; box-shadow: inset 0 2px 4px rgba(0,0,0,0.02); width: 100%; cursor: pointer;">
+                    <option disabled="" selected="" value="">Select Gender</option>
+                    <option value="Male">Male</option>
+                    <option value="Female">Female</option>
+                    <option value="Other">Other</option>
+                </select>
+            </div>
+        </div>
+    </div>
+    
+    <div style="margin-top: 2.5rem; display: flex; justify-content: flex-end;">
+        <button class="submit-btn blue-btn" onclick="goToPatStep2()" type="button" style="font-size: 1.15rem; padding: 16px 32px; display: flex; align-items: center; gap: 10px; border-radius: 12px; box-shadow: 0 4px 14px rgba(79, 70, 229, 0.4);">
+            Continue to Doctor Selection
+            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"></line><polyline points="12 5 19 12 12 19"></polyline></svg>
+        </button>
+    </div>
 </div>
 <!-- Step 2: Doctor Selection -->
 <div class="booking-form-box" id="pat-step-2" style="display: none;">
