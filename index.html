@@ -1179,7 +1179,7 @@ Live OPD Queue Status
 <div style="display: flex; gap: 15px; margin-top: 8px;">
 <label style="display: flex; align-items: center; gap: 6px; font-weight: 500; cursor: pointer;">
 <input checked="" name="pat-pay-method" type="radio" value="pocket"/>
-                                            Pocket (Bal: ₹<span id="pat-pocket-bal-display">500</span>)
+                                            Pocket (Bal: ₹<span id="pat-pocket-bal-display">0.00</span>)
                                         </label>
 <label style="display: flex; align-items: center; gap: 6px; font-weight: 500; cursor: pointer;">
 <input name="pat-pay-method" type="radio" value="upi"/>
@@ -1196,12 +1196,12 @@ Live OPD Queue Status
                                 </button>
 <h3>Payment Gateway</h3>
 <div id="payment-details-container" style="text-align: center; margin-bottom: 20px;">
-<p id="payment-amount-text" style="font-size: 1.1rem; font-weight: 600; color: var(--clr-text-main); margin-bottom: 10px;">Amount to Pay: <span style="color: var(--clr-primary);">₹150</span></p>
+<p id="payment-amount-text" style="font-size: 1.1rem; font-weight: 600; color: var(--clr-text-main); margin-bottom: 10px;">Amount to Pay: <span style="color: var(--clr-primary);">₹2</span></p>
 
 <!-- User requested QR Code -->
 <div id="payment-qr-section" style="background: white; padding: 20px; display: inline-block; border-radius: 12px; border: 1px solid var(--clr-border); margin-bottom: 15px;">
     <p style="font-size: 0.85rem; color: var(--clr-text-muted); margin-bottom: 10px;">Scan using any UPI app or click the button below</p>
-    <img alt="UPI QR Code" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&amp;data=upi://pay?pa=jaikishanji9794@okicici&amp;pn=Jai%20Kishan%20Ji&amp;am=150.00&amp;cu=INR" style="width: 200px; height: 200px;"/>
+    <img alt="UPI QR Code" src="https://api.qrserver.com/v1/create-qr-code/?size=200x200&amp;data=upi://pay?pa=jaikishanji9794@okicici&amp;pn=Jai%20Kishan%20Ji&amp;am=2.00&amp;cu=INR" style="width: 200px; height: 200px;"/>
 </div>
 
 <p style="text-align: center; color: var(--clr-text-light); margin-bottom: 20px;">
@@ -1595,9 +1595,7 @@ Diagnostic & Laboratory Reports
 </div>
 </div>
 </div></div></div></div>
-</main></div>
 <!-- Section 2: Dietary Minerals & Calcium Guide -->
-<!-- TAB 5: GENERAL INFO -->
 <!-- TAB 5: MY WALLET -->
 <div class="tab-panel" id="pat-tab-wallet">
 <div class="content-card" style="padding: 2.5rem; background: linear-gradient(to bottom right, #ffffff, #f8fafc);">
@@ -1663,6 +1661,7 @@ My Hindalco Wallet
 </div>
 </div>
 </div>
+</main></div>
 </section>
 <!-- Diagnostic Report Modal -->
 <div class="modal-overlay hidden" id="report-modal">

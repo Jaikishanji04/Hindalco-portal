@@ -1040,8 +1040,13 @@ async function handleOPDBooking(event) {
 
 // --- WALLET LOGIC ---
 function updateWalletDisplay() {
-    if (currentUser && document.getElementById('wallet-balance-display')) {
-        document.getElementById('wallet-balance-display').innerText = (currentUser.pocket_balance || 0).toFixed(2);
+    if (currentUser) {
+        if (document.getElementById('wallet-balance-display')) {
+            document.getElementById('wallet-balance-display').innerText = (currentUser.pocket_balance || 0).toFixed(2);
+        }
+        if (document.getElementById('pat-pocket-bal-display')) {
+            document.getElementById('pat-pocket-bal-display').innerText = (currentUser.pocket_balance || 0).toFixed(2);
+        }
     }
 }
 
