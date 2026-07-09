@@ -47,6 +47,7 @@ body {
     background: var(--background);
     background-attachment: fixed;
     color: var(--text-main);
+    font-size: 18px;
     line-height: 1.6;
     min-height: 100vh;
     overflow-x: hidden;
