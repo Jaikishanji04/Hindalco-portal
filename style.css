@@ -877,6 +877,50 @@ body {
 
 
 /* ========================================= */
+/* PREMIUM UI/UX ENHANCEMENTS                */
+/* ========================================= */
+/* Card Hover Effects */
+.content-card, .booking-form-box, .stat-card {
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.3s ease;
+}
+.content-card:hover, .booking-form-box:hover, .stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 24px rgba(0,0,0,0.08);
+}
+
+/* Enhanced Table Rows */
+.data-table tbody tr {
+    transition: all 0.25s ease;
+    border-radius: 8px;
+}
+.data-table tbody tr:hover {
+    background: rgba(79, 70, 229, 0.04);
+    transform: scale(1.01) translateX(4px);
+    box-shadow: -4px 0 0 var(--primary);
+}
+.data-table td:first-child {
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+}
+.data-table td:last-child {
+    border-top-right-radius: 8px;
+    border-bottom-right-radius: 8px;
+}
+
+/* Form Inputs Focus Glow */
+.form-group input:focus, .form-group select:focus {
+    box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.15);
+    border-color: var(--primary);
+}
+
+/* Button Pulse on Hover */
+.submit-btn:hover, .card-action-btn:hover {
+    box-shadow: 0 6px 15px rgba(79, 70, 229, 0.4);
+    transform: translateY(-2px);
+}
+.submit-btn:active, .card-action-btn:active {
+    transform: translateY(1px);
+}
 /* MOBILE RESPONSIVE FIXES (MUST BE AT END)  */
 /* ========================================= */
 @media (max-width: 768px) {
