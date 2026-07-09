@@ -972,11 +972,11 @@ async function handleOPDBooking(event) {
                     },
                     theme: { color: "#0284c7" }
                 };
-                if (data.payment_details.razorpay_order_id && typeof Razorpay !== 'undefined') {
+                if (data.payment_details.razorpay_order_id && options.key !== "mock_key" && typeof Razorpay !== 'undefined') {
                     const rzp = new Razorpay(options);
                     rzp.open();
                 } else {
-                    alert("Razorpay integration missing. Simulating success...");
+                    alert("Demo Mode: Simulating secure Razorpay transaction...");
                     await fetch(`/api/payments/verify?order_id=${data.payment_details.order_id}&razorpay_payment_id=mock_pay_id&razorpay_order_id=mock_order_id&razorpay_signature=mock_sig`, { method: 'POST', headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('hindalco_token') } });
                     document.getElementById('booking-dept').value = '';
                     document.getElementById('booking-doctor').innerHTML = '<option value="" disabled selected>Select Department First</option>';
