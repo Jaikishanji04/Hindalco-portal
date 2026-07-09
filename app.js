@@ -413,7 +413,7 @@ async function updateEmployeeDashboard() {
         }
         
         const appRes = await fetch('/api/appointments', {
-            headers: { 'Authorization': `Bearer ${currentUser.token}` }
+            headers: { 'Authorization': `Bearer ${sessionStorage.getItem('hindalco_token')}` }
         });
         if (appRes.ok) {
             const rawAppts = await appRes.json();
@@ -613,7 +613,7 @@ async function handleEmpOPDBooking(event) {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${currentUser.token}`
+                'Authorization': `Bearer ${sessionStorage.getItem('hindalco_token')}`
             },
             body: JSON.stringify({
                 doctor_id: docObj.id,
@@ -648,7 +648,7 @@ async function handleEmpOPDBooking(event) {
 async function updatePatientDashboard() {
     try {
         const appRes = await fetch('/api/appointments', {
-            headers: { 'Authorization': `Bearer ${currentUser.token}` }
+            headers: { 'Authorization': `Bearer ${sessionStorage.getItem('hindalco_token')}` }
         });
         if (appRes.ok) {
             const rawAppts = await appRes.json();
@@ -926,7 +926,7 @@ async function handleOPDBooking(event) {
             method: 'POST',
             headers: { 
                 'Content-Type': 'application/json',
-                'Authorization': `Bearer ${currentUser.token}`
+                'Authorization': `Bearer ${sessionStorage.getItem('hindalco_token')}`
             },
             body: JSON.stringify({
                 doctor_id: docObj.id,
