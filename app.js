@@ -692,6 +692,7 @@ async function updatePatientDashboard() {
     renderPatientOPDQueueStatus();
     fetchAndRenderLabReports(false);
     fetchAndRenderPrescriptions(false);
+    updateWalletDisplay();
 }
 
 // Render patient OPD live queue status
@@ -964,7 +965,14 @@ async function handleOPDBooking(event) {
         if (response.ok) {
             const data = await response.json();
             
-            if (data.status === "payment_required") {
+            if (data.status === "wallet_success") {
+                showToast(`Wallet Payment of ₹${data.payment_details.deducted} Successful!`, 'non-employee');
+                if (currentUser) {
+                    currentUser.pocket_balance -= data.payment_details.deducted;
+                    sessionStorage.setItem('hindalco_user', JSON.stringify(currentUser));
+                    updateWalletDisplay();
+                }
+            } else if (data.status === "payment_required") {
                 const options = {
                     key: data.payment_details.razorpay_key_id || "mock_key", // Use real key from backend if available
                     amount: data.payment_details.amount * 100,
@@ -1027,6 +1035,92 @@ async function handleOPDBooking(event) {
     } catch (e) {
         console.error(e);
         alert("Error booking appointment.");
+    }
+}
+
+// --- WALLET LOGIC ---
+function updateWalletDisplay() {
+    if (currentUser && document.getElementById('wallet-balance-display')) {
+        document.getElementById('wallet-balance-display').innerText = (currentUser.pocket_balance || 0).toFixed(2);
+    }
+}
+
+async function addFundsToWallet() {
+    const amountInput = document.getElementById('wallet-add-amount').value;
+    const amount = parseFloat(amountInput);
+    if (!amount || amount < 1) {
+        alert("Please enter a valid amount.");
+        return;
+    }
+    
+    try {
+        const response = await fetch('/api/wallet/add', {
+            method: 'POST',
+            headers: { 
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${sessionStorage.getItem('hindalco_token')}`
+            },
+            body: JSON.stringify({
+                user_id: currentUser.id,
+                amount: amount
+            })
+        });
+        
+        if (response.ok) {
+            const data = await response.json();
+            const options = {
+                key: data.razorpay_key_id || "mock_key",
+                amount: data.amount * 100,
+                currency: "INR",
+                name: "Hindalco Hospital Wallet",
+                description: "Wallet Top-up",
+                order_id: data.razorpay_order_id,
+                handler: async function (responseParams) {
+                    try {
+                        const verifyUrl = `/api/wallet/verify?order_id=${data.order_id}&razorpay_payment_id=${responseParams.razorpay_payment_id}&razorpay_order_id=${responseParams.razorpay_order_id}&razorpay_signature=${responseParams.razorpay_signature}&amount=${amount}`;
+                        const verifyRes = await fetch(verifyUrl, {
+                            method: 'POST',
+                            headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('hindalco_token') }
+                        });
+                        if (verifyRes.ok) {
+                            const vData = await verifyRes.json();
+                            alert("Wallet funded successfully!");
+                            currentUser.pocket_balance = vData.new_balance;
+                            sessionStorage.setItem('hindalco_user', JSON.stringify(currentUser));
+                            updateWalletDisplay();
+                            document.getElementById('wallet-add-amount').value = '';
+                        } else {
+                            alert("Payment verification failed.");
+                        }
+                    } catch (e) {
+                        console.error(e);
+                    }
+                },
+                prefill: {
+                    name: currentUser.name,
+                    email: currentUser.email || "patient@gmail.com"
+                },
+                theme: { color: "#4f46e5" }
+            };
+            
+            if (data.razorpay_order_id && options.key && options.key.startsWith("rzp_") && typeof Razorpay !== 'undefined') {
+                const rzp = new Razorpay(options);
+                rzp.open();
+            } else {
+                alert("Demo Mode: Simulating secure Razorpay QR/UPI transaction...");
+                const verifyUrl = `/api/wallet/verify?order_id=${data.order_id}&razorpay_payment_id=mock_pay_id&razorpay_order_id=mock_order_id&razorpay_signature=mock_sig&amount=${amount}`;
+                const verifyRes = await fetch(verifyUrl, { method: 'POST', headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('hindalco_token') } });
+                const vData = await verifyRes.json();
+                currentUser.pocket_balance = vData.new_balance;
+                sessionStorage.setItem('hindalco_user', JSON.stringify(currentUser));
+                updateWalletDisplay();
+                document.getElementById('wallet-add-amount').value = '';
+                alert("Demo Wallet funded successfully!");
+            }
+        }
+    } catch (e) {
+        console.error(e);
+        alert("Error adding funds.");
     }
 }
 

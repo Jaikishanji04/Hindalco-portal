@@ -1025,6 +1025,13 @@ Diagnostic & Laboratory Reports
 </svg>
                             Lab Reports &amp; Diagnostics
                         </button>
+<button class="nav-item" onclick="switchTab('pat', 'wallet', this)">
+<svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
+<rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect>
+<line x1="2" y1="10" x2="22" y2="10"></line>
+</svg>
+                            My Wallet
+                        </button>
 <button class="nav-item" onclick="switchTab('pat', 'diseases', this)">
 <svg fill="none" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24">
 <path d="M20.84 4.61a5.5 5.5 0 0 0-7.78 0L12 5.67l-1.06-1.06a5.5 5.5 0 0 0-7.78 7.78l1.06 1.06L12 21.23l7.78-7.78 1.06-1.06a5.5 5.5 0 0 0 0-7.78z"></path>
@@ -1591,6 +1598,32 @@ Diagnostic & Laboratory Reports
 </main></div>
 <!-- Section 2: Dietary Minerals & Calcium Guide -->
 <!-- TAB 5: GENERAL INFO -->
+<!-- TAB 5: MY WALLET -->
+<div class="tab-panel" id="pat-tab-wallet">
+<div class="content-card" style="padding: 2.5rem; background: linear-gradient(to bottom right, #ffffff, #f8fafc);">
+<div style="border-bottom: 2px solid rgba(0,0,0,0.05); padding-bottom: 1.5rem; margin-bottom: 2rem;">
+<h3 style="font-size: 1.6rem; color: var(--clr-primary); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 10px;">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="5" width="20" height="14" rx="2" ry="2"></rect><line x1="2" y1="10" x2="22" y2="10"></line></svg>
+My Hindalco Wallet
+</h3>
+<p style="color: var(--clr-text-muted); font-size: 1.05rem;">Add funds securely via Razorpay (UPI, QR code, Cards) for quick OPD bookings.</p>
+</div>
+<div style="display: flex; gap: 30px; align-items: flex-start; flex-wrap: wrap;">
+<div style="flex: 1; min-width: 300px; padding: 2rem; border-radius: 16px; background: linear-gradient(135deg, #4f46e5, #3b82f6); color: white; box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);">
+    <p style="margin: 0; opacity: 0.9; font-size: 1rem; text-transform: uppercase; letter-spacing: 1px;">Available Balance</p>
+    <h2 style="font-size: 3rem; margin: 10px 0; font-weight: 700;">₹<span id="wallet-balance-display">0.00</span></h2>
+    <p style="margin: 0; opacity: 0.8; font-size: 0.9rem;">Auto-deducted for OPD Appointments (₹2)</p>
+</div>
+<div style="flex: 1; min-width: 300px; padding: 2rem; border-radius: 16px; border: 1px solid rgba(0,0,0,0.1); background: white;">
+    <h4 style="margin-top: 0; margin-bottom: 15px; font-size: 1.2rem; color: var(--clr-text-main);">Add Funds to Wallet</h4>
+    <label style="display:block; margin-bottom: 8px; font-weight: 500;">Enter Amount (₹)</label>
+    <input type="number" id="wallet-add-amount" min="10" placeholder="e.g. 50" style="width: 100%; padding: 12px; border-radius: 8px; border: 1px solid #cbd5e1; margin-bottom: 15px; font-size: 1.1rem;">
+    <button class="submit-btn blue-btn" onclick="addFundsToWallet()" style="width: 100%; padding: 12px; font-size: 1.1rem;">Proceed to Pay via Razorpay</button>
+</div>
+</div>
+</div>
+</div>
+
 <div class="tab-panel" id="pat-tab-general-info">
 <div class="scheme-grid">
 <div class="content-card scheme-status-card">

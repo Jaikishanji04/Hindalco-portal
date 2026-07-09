@@ -173,11 +173,39 @@ def create_appointment(app_req: schemas.AppointmentCreate, background_tasks: Bac
             
         return {"status": "success", "appointment": schemas.Appointment.model_validate(appointment).model_dump()}
     else:
-        # Non-employee: Create a Cashfree Payment Order
+        # Non-employee: Check wallet balance first
+        if current_user.pocket_balance >= 2.0:
+            current_user.pocket_balance -= 2.0
+            appointment.status = "Scheduled"
+            appointment.token_number = f"PAT-{appointment.id}"
+            
+            payment = models.Payment(
+                user_id=current_user.id,
+                appointment_id=appointment.id,
+                amount=2.0,
+                currency="INR",
+                payment_status="Completed",
+                gateway_transaction_id="WALLET_DEDUCTION"
+            )
+            db.add(payment)
+            db.commit()
+            
+            doctor = db.query(models.Doctor).filter(models.Doctor.id == appointment.doctor_id).first()
+            if doctor:
+                background_tasks.add_task(email_service.send_appointment_email, current_user, appointment, doctor)
+            
+            return {
+                "status": "wallet_success", 
+                "appointment": schemas.Appointment.model_validate(appointment).model_dump(),
+                "payment_details": {"method": "wallet", "deducted": 2.0}
+            }
+            
+        # If insufficient wallet balance, create a Razorpay Payment Order for 2.0
         payment = models.Payment(
             user_id=current_user.id,
             appointment_id=appointment.id,
-            amount=500.0, # Fixed OPD fee for non-employees
+            amount=2.0, # OPD fee for non-employees
+
             currency="INR"
         )
         db.add(payment)
@@ -227,6 +255,37 @@ def verify_payment(order_id: str, razorpay_payment_id: str, razorpay_order_id: s
     return {"status": "failed"}
 
 
+
+@app.post("/api/wallet/add")
+def add_funds_to_wallet(request: schemas.WalletFundRequest, current_user: models.User = Depends(auth.get_current_user), db: Session = Depends(get_db)):
+    # Generate a Razorpay order for wallet top-up
+    razorpay_order = payment_service.create_order(amount=request.amount, currency="INR", receipt=f"WALLET_{current_user.id}")
+    
+    return {
+        "status": "success",
+        "order_id": f"WALLET_{current_user.id}_{razorpay_order.get('id')}",
+        "razorpay_order_id": razorpay_order.get("id"),
+        "razorpay_key_id": payment_service.RAZORPAY_KEY_ID,
+        "amount": request.amount
+    }
+
+@app.post("/api/wallet/verify")
+def verify_wallet_funds(order_id: str, razorpay_payment_id: str, razorpay_order_id: str, razorpay_signature: str, amount: float, db: Session = Depends(get_db)):
+    is_valid = payment_service.verify_signature(razorpay_order_id, razorpay_payment_id, razorpay_signature)
+    if not is_valid:
+        raise HTTPException(status_code=400, detail="Invalid payment signature")
+    
+    # Extract user ID from the custom order ID format: WALLET_{user_id}_{razorpay_order_id}
+    parts = order_id.split("_")
+    if len(parts) >= 2 and parts[0] == "WALLET":
+        user_id = int(parts[1])
+        user = db.query(models.User).filter(models.User.id == user_id).first()
+        if user:
+            user.pocket_balance += amount
+            db.commit()
+            return {"status": "success", "new_balance": user.pocket_balance}
+    
+    raise HTTPException(status_code=400, detail="Invalid wallet order format")
 
 # --- Lab Reports Routes ---
 @app.get("/api/lab_reports", response_model=list[schemas.LabReport])
