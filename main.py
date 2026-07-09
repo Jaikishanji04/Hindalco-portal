@@ -171,7 +171,7 @@ def create_appointment(app_req: schemas.AppointmentCreate, background_tasks: Bac
         if doctor:
             background_tasks.add_task(email_service.send_appointment_email, current_user, appointment, doctor)
             
-        return {"status": "success", "appointment": appointment}
+        return {"status": "success", "appointment": schemas.Appointment.model_validate(appointment).model_dump()}
     else:
         # Non-employee: Create a Cashfree Payment Order
         payment = models.Payment(
@@ -188,7 +188,7 @@ def create_appointment(app_req: schemas.AppointmentCreate, background_tasks: Bac
         
         return {
             "status": "payment_required", 
-            "appointment": appointment,
+            "appointment": schemas.Appointment.model_validate(appointment).model_dump(),
             "payment_details": {
                 "order_id": f"ORDER_{payment.id}",
                 "razorpay_order_id": razorpay_order.get("id"),

@@ -590,20 +590,18 @@ function showFamilySelection() {
     document.getElementById('emp-actual-booking-box').style.display = 'none';
     document.getElementById('emp-family-selection-box').style.display = 'block';
 }
-
 function checkBookingTimeLimit() {
     const now = new Date();
     const hours = now.getHours();
-    const minutes = now.getMinutes();
 
-    // Morning: 06:25 to 06:45
-    const isMorningSlot = (hours === 6 && minutes >= 25 && minutes <= 45);
+    // Morning: 7:00 AM to 8:00 AM
+    const isMorningSlot = (hours === 7);
     
-    // Evening: 13:25 to 13:55
-    const isEveningSlot = (hours === 13 && minutes >= 25 && minutes <= 55);
+    // Evening: 2:00 PM to 3:00 PM
+    const isEveningSlot = (hours === 14);
 
     if (!isMorningSlot && !isEveningSlot) {
-        alert("Booking is only allowed during designated time slots:\n\n🌅 Morning Shift: 6:25 AM to 6:45 AM\n🌆 Evening Shift: 1:25 PM to 1:55 PM");
+        alert("Booking time over! You can only book between 7 AM - 8 AM and 2 PM - 3 PM.");
         return false;
     }
     return true;
