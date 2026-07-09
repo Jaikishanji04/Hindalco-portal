@@ -591,8 +591,27 @@ function showFamilySelection() {
     document.getElementById('emp-family-selection-box').style.display = 'block';
 }
 
+function checkBookingTimeLimit() {
+    const now = new Date();
+    const hours = now.getHours();
+    const minutes = now.getMinutes();
+
+    // Morning: 06:25 to 06:45
+    const isMorningSlot = (hours === 6 && minutes >= 25 && minutes <= 45);
+    
+    // Evening: 13:25 to 13:55
+    const isEveningSlot = (hours === 13 && minutes >= 25 && minutes <= 55);
+
+    if (!isMorningSlot && !isEveningSlot) {
+        alert("Booking is only allowed during designated time slots:\n\n🌅 Morning Shift: 6:25 AM to 6:45 AM\n🌆 Evening Shift: 1:25 PM to 1:55 PM");
+        return false;
+    }
+    return true;
+}
+
 async function handleEmpOPDBooking(event) {
     event.preventDefault();
+    if (!checkBookingTimeLimit()) return;
     
     const dept = document.getElementById('emp-booking-dept').value;
     const doctor = document.getElementById('emp-booking-doctor').value;
