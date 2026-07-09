@@ -1989,6 +1989,7 @@ window.handleAuthSubmit = async function(event) {
 
 // --- FINAL LOGIN FLOW FIX ---
 window.performLogin = async function(username, password) {
+    const expectedRole = window.currentRole || 'non-employee';
     const formData = new URLSearchParams();
     formData.append('username', username);
     formData.append('password', password);
@@ -2003,13 +2004,22 @@ window.performLogin = async function(username, password) {
         throw new Error('Invalid credentials');
     }
     const data = await res.json();
-    sessionStorage.setItem('hindalco_token', data.access_token);
     
     // Fetch user details
     const meRes = await fetch('/api/auth/me', {
         headers: { 'Authorization': 'Bearer ' + data.access_token }
     });
     const userData = await meRes.json();
+    
+    // VERIFICATION: Check if the user's actual role matches the portal they are trying to log into.
+    if (expectedRole === 'doctor' && userData.role !== 'doctor' && userData.role !== 'admin') {
+        throw new Error('Unauthorized: You are not a registered Doctor.');
+    }
+    if (expectedRole === 'employee' && userData.role !== 'employee') {
+        throw new Error('Unauthorized: You are not a registered Employee.');
+    }
+    
+    sessionStorage.setItem('hindalco_token', data.access_token);
     sessionStorage.setItem('hindalco_user', JSON.stringify(userData));
     
     // Update global variables
