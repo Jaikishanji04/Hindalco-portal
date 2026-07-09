@@ -1253,7 +1253,46 @@ Diagnostic & Laboratory Reports
 </div>
 </div>
 <!-- TAB 4.5: BASIC MEDICAL CARE -->
-<div class="tab-panel" id="pat-tab-diseases"><div class="medical-care-container"><div class="medical-care-header-box"><h3>Basic Medical Care &amp; Wellness Directory</h3></div><div class="medical-grid-split" style="display: flex; flex-direction: column; gap: 30px;"><div class="content-card" style="width: 100%;"><div class="card-header-styled" style="margin-bottom: 20px;"><h4>Common Health Conditions (South Asian Focus)</h4><span class="pulse-indicator-small" style="background-color: var(--clr-primary)"></span></div><div class="dashboard-grid" style="grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));">
+<div class="tab-panel" id="pat-tab-diseases"><div class="medical-care-container"><div class="medical-care-header-box"><h3>Basic Medical Care &amp; Wellness Directory</h3></div><div class="medical-grid-split" style="display: flex; flex-direction: column; gap: 30px;"><div class="content-card" style="width: 100%;"><div class="card-header-styled" style="margin-bottom: 20px;"><h4>Common Health Conditions (South Asian Focus)</h4><span class="pulse-indicator-small" style="background-color: var(--clr-primary)"></span></div>
+<style>
+.horizontal-disease-grid {
+    display: flex;
+    overflow-x: auto;
+    gap: 20px;
+    padding-bottom: 20px;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+}
+.horizontal-disease-grid .content-card {
+    flex: 0 0 450px;
+    scroll-snap-align: start;
+    min-width: 450px;
+}
+.animated-image-pulse {
+    animation: image-pulse 2.5s infinite ease-in-out;
+}
+@keyframes image-pulse {
+    0% { transform: scale(1); box-shadow: 0 0 0px rgba(255,105,180,0); }
+    50% { transform: scale(1.05); box-shadow: 0 8px 15px rgba(255,105,180,0.5); border-radius: 8px;}
+    100% { transform: scale(1); box-shadow: 0 0 0px rgba(255,105,180,0); }
+}
+/* custom scrollbar */
+.horizontal-disease-grid::-webkit-scrollbar {
+    height: 12px;
+}
+.horizontal-disease-grid::-webkit-scrollbar-track {
+    background: #f1f5f9;
+    border-radius: 6px;
+}
+.horizontal-disease-grid::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 6px;
+}
+.horizontal-disease-grid::-webkit-scrollbar-thumb:hover {
+    background: #94a3b8;
+}
+</style>
+<div class="horizontal-disease-grid">
 <!-- PCOS / PCOD Card -->
 <div class="content-card">
 <div class="card-header" style="align-items: center;">
@@ -1420,6 +1459,41 @@ Diagnostic & Laboratory Reports
 <li>Ultra-processed junk food.</li>
 </ul>
 </div>
+</div>
+</div>
+</div>
+<!-- Breast Cancer Card -->
+<div class="content-card">
+<div class="card-header" style="align-items: center;">
+<div style="display: flex; gap: 10px; align-items: center;">
+<div class="card-icon" style="color: #ec4899;"><svg fill="none" height="24" stroke="currentColor" stroke-width="2" viewbox="0 0 24 24" width="24"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"></path></svg></div>
+<h3 style="margin:0; font-size: 1.15rem; color: #ec4899;">Breast Cancer Awareness</h3>
+</div>
+</div>
+<div style="margin-top: 15px; font-size: 0.95rem; line-height: 1.6;">
+<p><strong>Detailed Causes:</strong> Breast cancer occurs when cells in the breast begin to grow out of control. Key risk factors include genetics (BRCA1/BRCA2), radiation exposure, obesity, and hormonal imbalances.</p>
+<p><strong>Comprehensive Dietary Guidelines:</strong></p>
+<div class="medical-do-dont-grid" style="grid-template-columns: 1fr 1fr; display: grid; gap: 15px; margin-bottom: 15px;">
+<div class="diet-box" style="background: #fdf2f8; padding: 15px; border-radius: 8px; border-left: 4px solid #ec4899;">
+<h5 style="color: #9d174d; margin-bottom: 10px;">What to Eat</h5>
+<img alt="Healthy Food for Breast Cancer" class="diet-graphic animated-image-pulse" src="assets/images/breast_cancer_healthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px; border: 2px solid #fbcfe8;"/>
+<ul style="padding-left: 20px;">
+<li>Berries &amp; leafy greens.</li>
+<li>Walnuts &amp; Omega-3s.</li>
+<li>Cruciferous veggies (broccoli).</li>
+</ul>
+</div>
+<div class="dont-box" style="background: #fef2f2; padding: 15px; border-radius: 8px; border-left: 4px solid #ef4444;">
+<h5 style="color: #991b1b; margin-bottom: 10px;">What NOT to Eat</h5>
+<img alt="Unhealthy Food" class="diet-graphic animated-image-pulse" src="assets/images/breast_cancer_unhealthy.png" style="width: 100%; max-width: 200px; border-radius: 8px; margin-bottom: 10px; border: 2px solid #fecaca;"/>
+<ul style="padding-left: 20px;">
+<li>Processed meats &amp; trans fats.</li>
+<li>Excessive alcohol intake.</li>
+<li>Refined sugars &amp; fast food.</li>
+</ul>
+</div>
+</div>
+<p><strong>Medical Management:</strong> Early detection through regular mammograms and self-exams is critical. Treatments include surgery, radiation, chemotherapy, or targeted hormone therapy.</p>
 </div>
 </div>
 </div>
