@@ -872,6 +872,10 @@ function goToPatStep2() {
         alert("Please fill in all patient details first.");
         return;
     }
+    if (age < 1 || age > 100) {
+        alert("Please enter a valid age between 1 and 100.");
+        return;
+    }
     document.getElementById('pat-step-1').style.display = 'none';
     document.getElementById('pat-step-2').style.display = 'block';
     document.getElementById('pat-step-3').style.display = 'none';
