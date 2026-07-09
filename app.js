@@ -941,7 +941,7 @@ async function handleOPDBooking(event) {
             
             if (data.status === "payment_required") {
                 const options = {
-                    key: "mock_key", // Fallback, will fail if no real key
+                    key: data.payment_details.razorpay_key_id || "mock_key", // Use real key from backend if available
                     amount: data.payment_details.amount * 100,
                     currency: data.payment_details.currency,
                     name: "Hindalco Hospital",
@@ -972,7 +972,7 @@ async function handleOPDBooking(event) {
                     },
                     theme: { color: "#0284c7" }
                 };
-                if (data.payment_details.razorpay_order_id && options.key !== "mock_key" && typeof Razorpay !== 'undefined') {
+                if (data.payment_details.razorpay_order_id && options.key && options.key.startsWith("rzp_") && typeof Razorpay !== 'undefined') {
                     const rzp = new Razorpay(options);
                     rzp.open();
                 } else {

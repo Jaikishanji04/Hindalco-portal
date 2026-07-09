@@ -192,6 +192,7 @@ def create_appointment(app_req: schemas.AppointmentCreate, background_tasks: Bac
             "payment_details": {
                 "order_id": f"ORDER_{payment.id}",
                 "razorpay_order_id": razorpay_order.get("id"),
+                "razorpay_key_id": payment_service.RAZORPAY_KEY_ID,
                 "amount": payment.amount,
                 "currency": payment.currency
             }
