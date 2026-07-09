@@ -225,10 +225,16 @@
 </header>
 <div class="tab-panel" id="emp-tab-opd-status">
 <div class="opd-status-layout">
-<div class="content-card">
-<div class="card-header">
-<h3>OPD Status</h3>
-<button class="card-action-btn" onclick="updateEmployeeDashboard()">Refresh Status</button>
+<div class="content-card" style="padding: 2.5rem; background: linear-gradient(to bottom right, #ffffff, #f8fafc);">
+<div class="card-header" style="border-bottom: 2px solid rgba(0,0,0,0.05); padding-bottom: 1.5rem; margin-bottom: 2rem;">
+<h3 style="font-size: 1.6rem; color: var(--clr-primary); display: flex; align-items: center; gap: 10px;">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 15 15"></polyline></svg>
+Live OPD Queue Status
+</h3>
+<button class="card-action-btn" onclick="updateEmployeeDashboard()" style="font-size: 1.05rem; padding: 10px 20px; display: flex; align-items: center; gap: 8px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+Refresh Status
+</button>
 </div>
 <div id="emp-opd-status-list-container">
 <!-- Dynamic list of queue status items populated from app.js -->
@@ -316,8 +322,14 @@
 <!-- TAB 4: DIAGNOSTICS & LAB REPORTS (EMPLOYEE) -->
 <div class="tab-panel" id="emp-tab-diagnostics">
 <div class="lab-reports-panel">
-<div class="content-card">
-<h3>My Outpatient Laboratory Records</h3>
+<div class="content-card" style="padding: 2.5rem; background: linear-gradient(to bottom right, #ffffff, #f8fafc);">
+<div style="border-bottom: 2px solid rgba(0,0,0,0.05); padding-bottom: 1.5rem; margin-bottom: 2rem;">
+<h3 style="font-size: 1.6rem; color: var(--clr-primary); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 10px;">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+Diagnostic & Laboratory Reports
+</h3>
+<p style="color: var(--clr-text-muted); font-size: 1.05rem;">View and download your official outpatient test results and medical reports.</p>
+</div>
 <div class="reports-table-container">
 <table class="data-table">
 <thead>
@@ -988,11 +1000,16 @@
 <!-- TAB 1.5: OPD STATUS -->
 <div class="tab-panel" id="pat-tab-opd-status">
 <div class="opd-status-layout">
-<div class="content-card">
-<div class="card-header">
-<h3>OPD Status</h3>
-<button class="card-action-btn" onclick="updatePatientDashboard()">Refresh
-                                        Status</button>
+<div class="content-card" style="padding: 2.5rem; background: linear-gradient(to bottom right, #ffffff, #f8fafc);">
+<div class="card-header" style="border-bottom: 2px solid rgba(0,0,0,0.05); padding-bottom: 1.5rem; margin-bottom: 2rem;">
+<h3 style="font-size: 1.6rem; color: var(--clr-primary); display: flex; align-items: center; gap: 10px;">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 15 15"></polyline></svg>
+Live OPD Queue Status
+</h3>
+<button class="card-action-btn" onclick="updatePatientDashboard()" style="font-size: 1.05rem; padding: 10px 20px; display: flex; align-items: center; gap: 8px;">
+<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+Refresh Status
+</button>
 </div>
 <div id="opd-status-list-container">
 <!-- Dynamic list of queue status items populated from app.js -->
@@ -1120,8 +1137,14 @@
 <!-- TAB 4: DIAGNOSTICS & LAB REPORTS -->
 <div class="tab-panel" id="pat-tab-diagnostics">
 <div class="lab-reports-panel">
-<div class="content-card">
-<h3>My Outpatient Laboratory Records</h3>
+<div class="content-card" style="padding: 2.5rem; background: linear-gradient(to bottom right, #ffffff, #f8fafc);">
+<div style="border-bottom: 2px solid rgba(0,0,0,0.05); padding-bottom: 1.5rem; margin-bottom: 2rem;">
+<h3 style="font-size: 1.6rem; color: var(--clr-primary); margin-bottom: 0.5rem; display: flex; align-items: center; gap: 10px;">
+<svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+Diagnostic & Laboratory Reports
+</h3>
+<p style="color: var(--clr-text-muted); font-size: 1.05rem;">View and download your official outpatient test results and medical reports.</p>
+</div>
 <div class="reports-table-container">
 <table class="data-table">
 <thead>
