@@ -912,16 +912,15 @@ function goToPatStep3() {
         document.getElementById('payment-qr-section').style.display = 'none';
     } else {
         if (payMethod === 'pocket') {
-            if (pocketBalance < 150) {
-                alert("Insufficient pocket balance. Please select UPI or add funds.");
+            const bal = currentUser ? (currentUser.pocket_balance || 0) : 0;
+            if (bal < 2) {
+                alert("Insufficient wallet balance. Please add funds from 'My Wallet' tab or use UPI.");
                 return;
             }
-            pocketBalance -= 150;
-            document.getElementById('pat-pocket-bal-display').innerText = pocketBalance;
-            document.getElementById('payment-amount-text').innerHTML = `Amount to Pay: <span style="color: var(--clr-primary);">₹150 (Paid via Pocket)</span>`;
+            document.getElementById('payment-amount-text').innerHTML = `Amount to Pay: <span style="color: var(--clr-primary);">₹2 (Auto-deducted from Wallet)</span>`;
             document.getElementById('payment-qr-section').style.display = 'none';
         } else {
-            document.getElementById('payment-amount-text').innerHTML = `Amount to Pay: <span style="color: var(--clr-primary);">₹150</span>`;
+            document.getElementById('payment-amount-text').innerHTML = `Amount to Pay: <span style="color: var(--clr-primary);">₹2</span>`;
             document.getElementById('payment-qr-section').style.display = 'block';
         }
     }
