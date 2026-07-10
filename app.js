@@ -1004,7 +1004,7 @@ async function handleOPDBooking(event) {
                     },
                     theme: { color: "#0284c7" }
                 };
-                if (data.payment_details.razorpay_order_id && options.key && options.key.startsWith("rzp_") && typeof Razorpay !== 'undefined') {
+                if (data.payment_details.razorpay_order_id && !data.payment_details.razorpay_order_id.startsWith("mock_") && options.key && options.key.startsWith("rzp_") && typeof Razorpay !== 'undefined') {
                     const rzp = new Razorpay(options);
                     rzp.open();
                     return; // Wait for handler
@@ -1125,7 +1125,7 @@ async function addFundsToWallet() {
                 }
             };
             
-            if (data.razorpay_order_id && options.key && options.key.startsWith("rzp_") && typeof Razorpay !== 'undefined') {
+            if (data.razorpay_order_id && !data.razorpay_order_id.startsWith("mock_") && options.key && options.key.startsWith("rzp_") && typeof Razorpay !== 'undefined') {
                 const rzp = new Razorpay(options);
                 rzp.open();
                 if (btn) {
