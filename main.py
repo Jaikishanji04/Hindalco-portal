@@ -148,19 +148,19 @@ def create_appointment(app_req: schemas.AppointmentCreate, background_tasks: Bac
     db.refresh(appointment)
     
     if current_user.role == "employee":
-        if current_user.pocket_balance < 200.0:
+        if current_user.pocket_balance < 2.0:
             db.delete(appointment)
             db.commit()
             raise HTTPException(status_code=400, detail="Insufficient wallet balance. Please contact HR to add funds.")
             
-        current_user.pocket_balance -= 200.0
+        current_user.pocket_balance -= 2.0
         appointment.token_number = f"EMP-{appointment.id}"
         
         # Create payment record for employee wallet deduction
         payment = models.Payment(
             user_id=current_user.id,
             appointment_id=appointment.id,
-            amount=200.0,
+            amount=2.0,
             currency="INR",
             payment_status="Completed"
         )

@@ -44,7 +44,7 @@ let patientAppointments = [
 ];
 
 let employeeAppointments = [];
-let pocketBalance = 500;
+let pocketBalance = 0;
 
 // Corporate Wellness announcements desk
 let corporateCirculars = [
@@ -1058,6 +1058,13 @@ async function addFundsToWallet() {
         return;
     }
     
+    const btn = document.getElementById('wallet-add-btn');
+    const originalText = btn ? btn.innerText : 'Proceed to Pay via Razorpay';
+    if (btn) {
+        btn.innerText = 'Generating QR Code...';
+        btn.disabled = true;
+    }
+    
     try {
         const response = await fetch('/api/wallet/add', {
             method: 'POST',
@@ -1105,12 +1112,24 @@ async function addFundsToWallet() {
                     name: currentUser.name,
                     email: currentUser.email || "patient@gmail.com"
                 },
-                theme: { color: "#4f46e5" }
+                theme: { color: "#4f46e5" },
+                modal: {
+                    ondismiss: function() {
+                        if (btn) {
+                            btn.innerText = originalText;
+                            btn.disabled = false;
+                        }
+                    }
+                }
             };
             
             if (data.razorpay_order_id && options.key && options.key.startsWith("rzp_") && typeof Razorpay !== 'undefined') {
                 const rzp = new Razorpay(options);
                 rzp.open();
+                if (btn) {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
             } else {
                 alert("Demo Mode: Simulating secure Razorpay QR/UPI transaction...");
                 const verifyUrl = `/api/wallet/verify?order_id=${data.order_id}&razorpay_payment_id=mock_pay_id&razorpay_order_id=mock_order_id&razorpay_signature=mock_sig&amount=${amount}`;
@@ -1121,11 +1140,24 @@ async function addFundsToWallet() {
                 updateWalletDisplay();
                 document.getElementById('wallet-add-amount').value = '';
                 alert("Demo Wallet funded successfully!");
+                if (btn) {
+                    btn.innerText = originalText;
+                    btn.disabled = false;
+                }
+            }
+        } else {
+            if (btn) {
+                btn.innerText = originalText;
+                btn.disabled = false;
             }
         }
     } catch (e) {
         console.error(e);
         alert("Error adding funds.");
+        if (btn) {
+            btn.innerText = originalText;
+            btn.disabled = false;
+        }
     }
 }
 
