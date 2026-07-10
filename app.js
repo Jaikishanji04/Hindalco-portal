@@ -909,7 +909,9 @@ function goToPatStep3() {
 
     if (hasPastAppt) {
         document.getElementById('payment-amount-text').innerHTML = `Amount to Pay: <span style="color: var(--clr-primary);">₹0 (Free Follow-Up)</span>`;
-        document.getElementById('payment-qr-section').style.display = 'none';
+        if (document.getElementById('payment-qr-section')) document.getElementById('payment-qr-section').style.display = 'none';
+        if (document.getElementById('razorpay-secure-badge')) document.getElementById('razorpay-secure-badge').style.display = 'none';
+        document.querySelector('#pat-step-3 .submit-btn').innerText = 'Confirm Appointment (Free)';
     } else {
         if (payMethod === 'pocket') {
             const bal = currentUser ? (currentUser.pocket_balance || 0) : 0;
@@ -918,8 +920,14 @@ function goToPatStep3() {
                 return;
             }
             document.getElementById('payment-amount-text').innerHTML = `Amount to Pay: <span style="color: var(--clr-primary);">₹2 (Auto-deducted from Wallet)</span>`;
+            if (document.getElementById('payment-qr-section')) document.getElementById('payment-qr-section').style.display = 'none';
+            if (document.getElementById('razorpay-secure-badge')) document.getElementById('razorpay-secure-badge').style.display = 'none';
+            document.querySelector('#pat-step-3 .submit-btn').innerText = 'Confirm & Book Appointment';
         } else {
             document.getElementById('payment-amount-text').innerHTML = `Amount to Pay: <span style="color: var(--clr-primary);">₹2</span>`;
+            if (document.getElementById('payment-qr-section')) document.getElementById('payment-qr-section').style.display = 'block';
+            if (document.getElementById('razorpay-secure-badge')) document.getElementById('razorpay-secure-badge').style.display = 'block';
+            document.querySelector('#pat-step-3 .submit-btn').innerText = 'I have paid via UPI';
         }
     }
 
@@ -1004,6 +1012,18 @@ async function handleOPDBooking(event) {
                     },
                     theme: { color: "#0284c7" }
                 };
+                if (payMethod === 'upi') {
+                    // Bypass Razorpay completely since they already paid via the static QR
+                    alert("Verifying direct UPI payment on backend...");
+                    await fetch(`/api/payments/verify?order_id=${data.payment_details.order_id}&razorpay_payment_id=mock_pay_id&razorpay_order_id=mock_order_id&razorpay_signature=mock_sig`, { method: 'POST', headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('hindalco_token') } });
+                    document.getElementById('booking-dept').value = '';
+                    document.getElementById('booking-doctor').innerHTML = '<option value="" disabled selected>Select Department First</option>';
+                    await updatePatientDashboard();
+                    switchTab('pat', 'opd-status');
+                    goToPatStep1();
+                    return; // Stop execution
+                }
+
                 if (data.payment_details.razorpay_order_id && !data.payment_details.razorpay_order_id.startsWith("mock_") && options.key && options.key.startsWith("rzp_") && typeof Razorpay !== 'undefined') {
                     const rzp = new Razorpay(options);
                     rzp.open();
