@@ -918,10 +918,8 @@ function goToPatStep3() {
                 return;
             }
             document.getElementById('payment-amount-text').innerHTML = `Amount to Pay: <span style="color: var(--clr-primary);">₹2 (Auto-deducted from Wallet)</span>`;
-            document.getElementById('payment-qr-section').style.display = 'none';
         } else {
             document.getElementById('payment-amount-text').innerHTML = `Amount to Pay: <span style="color: var(--clr-primary);">₹2</span>`;
-            document.getElementById('payment-qr-section').style.display = 'block';
         }
     }
 
@@ -971,6 +969,7 @@ async function handleOPDBooking(event) {
                     sessionStorage.setItem('hindalco_user', JSON.stringify(currentUser));
                     updateWalletDisplay();
                 }
+                // Fall through to finalize booking flow below
             } else if (data.status === "payment_required") {
                 const options = {
                     key: data.payment_details.razorpay_key_id || "mock_key", // Use real key from backend if available
@@ -991,6 +990,7 @@ async function handleOPDBooking(event) {
                                 document.getElementById('booking-doctor').innerHTML = '<option value="" disabled selected>Select Department First</option>';
                                 await updatePatientDashboard();
                                 switchTab('pat', 'opd-status');
+                                goToPatStep1();
                             } else {
                                 alert("Payment verification failed.");
                             }
@@ -1007,6 +1007,7 @@ async function handleOPDBooking(event) {
                 if (data.payment_details.razorpay_order_id && options.key && options.key.startsWith("rzp_") && typeof Razorpay !== 'undefined') {
                     const rzp = new Razorpay(options);
                     rzp.open();
+                    return; // Wait for handler
                 } else {
                     alert("Demo Mode: Simulating secure Razorpay transaction...");
                     await fetch(`/api/payments/verify?order_id=${data.payment_details.order_id}&razorpay_payment_id=mock_pay_id&razorpay_order_id=mock_order_id&razorpay_signature=mock_sig`, { method: 'POST', headers: { 'Authorization': 'Bearer ' + sessionStorage.getItem('hindalco_token') } });
@@ -1014,9 +1015,11 @@ async function handleOPDBooking(event) {
                     document.getElementById('booking-doctor').innerHTML = '<option value="" disabled selected>Select Department First</option>';
                     await updatePatientDashboard();
                     switchTab('pat', 'opd-status');
+                    goToPatStep1();
+                    return; // Stop execution
                 }
             }
-            
+
             document.getElementById('booking-dept').value = '';
             document.getElementById('booking-doctor').innerHTML = '<option value="" disabled selected>Select Department First</option>';
             await updatePatientDashboard();
